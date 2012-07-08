@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spiechu\Tests\JSONDiskCache;
+namespace Spiechu\JSONDiskCacheTest;
 
 use Spiechu\JSONDiskCache\JSONDiskCache;
 
