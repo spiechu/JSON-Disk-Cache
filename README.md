@@ -38,17 +38,20 @@ $JSONDiskCache->set('valueName', 'value to cache');
 Now You can retrieve value from cache, notice that null value is treated as no cache at all:
 
 ```php
+<?php
 $cachedValue = $JSONDiskCache->get('valueName');
 ```
 
 You can also clear cache, true means cache was found and deleted:
 
 ```php
+<?php
 $isCleared = $JSONDiskCache->clear('valueName');
 ```
 
 Suppose You have `$db` object that retrieves data from database with `$db->fetchData(1)` method. When valid cache for pair `array('dataName', 1)` is found then cache is used, otherwise `$db->fetchData(1)`:
 
 ```php
+<?php
 $value = JSONDiskCache->getSet(['dataName', 1], [$db, 'fetchData', 1]);
 ```
