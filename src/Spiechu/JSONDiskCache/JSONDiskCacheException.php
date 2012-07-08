@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the JsonDiskCache package.
+ * This file is part of the JSONDiskCache package.
  *
  * (c) Dawid Spiechowicz <spiechu@gmail.com>
  *
@@ -11,6 +11,6 @@
 
 namespace Spiechu\JsonDiskCache;
 
-class JsonDiskCacheException extends \Exception {
+class JSONDiskCacheException extends \Exception {
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the JsonDiskCache package.
+ * This file is part of the JSONDiskCache package.
  *
  * (c) Dawid Spiechowicz <spiechu@gmail.com>
  *
@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Spiechu\JsonDiskCache;
+namespace Spiechu\JSONDiskCache;
 
 /**
  * Cache class intended to keep serialized data in JSON format files.
@@ -17,8 +17,9 @@ namespace Spiechu\JsonDiskCache;
  * There is one cache directory where can be found one cache file per domain.
  * This prevents from mixing the same cache variable names.
  */
-class JsonDiskCache
+class JSONDiskCache
 {
+
     const DEFAULT_VALID_TIME = 60;
     const CACHE_DIR_PERMS = 0700;
     const CACHE_FILE_EXTENSION = 'cache';
@@ -55,7 +56,7 @@ class JsonDiskCache
      *
      * @var array
      */
-    protected $_cache = array();
+    protected $_cache = [];
 
     /**
      * Helper table to faster resolve often used hashes
@@ -69,7 +70,7 @@ class JsonDiskCache
      *
      * @var array
      */
-    protected $_fetchedDomains = array();
+    protected $_fetchedDomains = [];
 
     /**
      * @param string|null $cacheDir points to cache dir or uses default when null
@@ -110,7 +111,7 @@ class JsonDiskCache
             throw new JsonDiskCacheException("{$hashFile->getFilename()} is not readable or writable");
         }
         $hashFileContents = json_decode(file_get_contents($hashFile), true);
-        $this->_hashTable = ($hashFileContents === null) ? array() : $hashFileContents;
+        $this->_hashTable = ($hashFileContents === null) ? [] : $hashFileContents;
     }
 
     /**
@@ -168,7 +169,7 @@ class JsonDiskCache
     protected function fetchDataFromFile($file)
     {
         $fetchedData = json_decode(file_get_contents($file), true);
-        $this->_cache[$this->_domain] = ($fetchedData === null) ? array() : $fetchedData;
+        $this->_cache[$this->_domain] = ($fetchedData === null) ? [] : $fetchedData;
     }
 
     /**
@@ -235,7 +236,7 @@ class JsonDiskCache
     /**
      * Sets name and value to cache
      *
-     * @param  string        $name      cache name to set
+     * @param  string|array  $name      cache name to set or array with name and params
      * @param  mixed         $value     cache value to set
      * @param  integer|null  $validTime $this->_validTime is used when set to null
      * @return JsonDiskCache fluent interface
@@ -254,8 +255,8 @@ class JsonDiskCache
     /**
      * Gets value from cache
      *
-     * @param  string $name cache name in current domain
-     * @return mixed  value from cache or false when not found or not valid
+     * @param  string|array $name cache name in current domain or array with name and params
+     * @return mixed        value from cache or null when not found or not valid
      */
     public function get($name)
     {
@@ -271,22 +272,31 @@ class JsonDiskCache
             unset($this->_cache[$this->_domain][$nameHash]);
         }
 
-        return false;
+        return null;
     }
 
     /**
      * Shorthand method to get cached value and set if cache is not valid
      *
-     * @param  string       $name      cache name to get or set
-     * @param  mixed        $value     cache value to set if cache not present
-     * @param  integer|null $validTime $this->_validTime is used when set to null
+     * @param  string|array $name            cache name in current domain or array with name and params
+     * @param  array        $objectAndMethod function name to execute to retrieve the value to set or array with object[name] and method name to execute
+     * @param  integer|null $validTime       $this->_validTime is used when set to null
      * @return mixed        cached value
+     * @todo make more readable executing object->method(param)
      */
-    public function getSet($name, $value, $validTime = null)
+    public function getSet($name, $objectAndMethod, $validTime = null)
     {
         $returnValue = $this->get($name);
-        if ($returnValue === false) {
-            $this->set($name, $value, $validTime);
+        if ($returnValue === null) {
+            if (array_key_exists(2, $objectAndMethod)) {
+                if (array_key_exists(3, $objectAndMethod)) {
+                    $this->set($name, $objectAndMethod[0]->$objectAndMethod[1]($objectAndMethod[2], $objectAndMethod[3]), $validTime);
+                } else {
+                    $this->set($name, $objectAndMethod[0]->$objectAndMethod[1]($objectAndMethod[2]), $validTime);
+                }
+            } else {
+                $this->set($name, $objectAndMethod[0]->$objectAndMethod[1](), $validTime);
+            }
         } else {
             return $returnValue;
         }
@@ -297,8 +307,8 @@ class JsonDiskCache
     /**
      * Checks if name is present in current domain
      *
-     * @param  string  $name cache name in current domain
-     * @return boolean true when name is present
+     * @param  string|array $name cache name in current domain or array with name and params
+     * @return boolean      true when name is present
      */
     public function isCachePresent($name)
     {
@@ -308,8 +318,8 @@ class JsonDiskCache
     /**
      * Clears cache entry
      *
-     * @param  string  $name cache name in current domain
-     * @return boolean true when entry has been found and deleted
+     * @param  string|array $name cache name in current domain or array with name and params
+     * @return boolean      true when entry has been found and deleted
      */
     public function clear($name)
     {
@@ -325,12 +335,12 @@ class JsonDiskCache
     /**
      * Returns sha1 hash from name
      *
-     * @param  string $name cache name
+     * @param  string|array cache name or array with name and params
      * @return string hash form $name
      */
     protected function getHashKey($name)
     {
-        $name = (string) $name;
+        $name = (is_array($name)) ? implode($name) : (string) $name;
         $key = array_search($name, $this->_hashTable);
         if ($key === false) {
             $hashedName = sha1($name);
@@ -345,8 +355,8 @@ class JsonDiskCache
     /**
      * Checks if cache value is not too old
      *
-     * @param  string  $name cache name to check in current domain
-     * @return boolean true when cache value is valid
+     * @param  string|array $name cache name in current domain or array with name and params
+     * @return boolean      true when cache value is valid
      */
     public function isCacheValid($name)
     {
@@ -365,7 +375,7 @@ class JsonDiskCache
         foreach ($this->_cache as $domain => $cache) {
             if (count($this->_cache[$domain]) > self::CACHE_FILE_MAX_RECORDS) {
                 $this->deleteCacheFile($domain);
-                $this->_cache[$domain] = array();
+                $this->_cache[$domain] = [];
             }
 
             if (count($this->_cache[$domain]) > intval(self::CACHE_FILE_MAX_RECORDS * self::CACHE_FILE_CLEANUP_THRESHOLD)) {
@@ -410,7 +420,7 @@ class JsonDiskCache
     public function saveHashTableToFile()
     {
         if (count($this->_hashTable) > self::HASH_FILE_MAX_RECORDS) {
-            $this->_hashTable = array();
+            $this->_hashTable = [];
         }
         file_put_contents($this->_cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILENAME . '.' . self::CACHE_FILE_EXTENSION, json_encode($this->_hashTable));
     }
