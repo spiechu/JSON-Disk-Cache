@@ -1,0 +1,29 @@
+{
+    "name": "spiechu/json-disk-cache",
+    "description": "Cache class intended to keep serialized data in JSON format files",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["cache", "json"],
+    "homepage": "https://github.com/spiechu/JSON-Disk-Cache",
+    "authors": [
+        {
+            "name": "Dawid Spiechowicz",
+            "email": "spiechu@gmail.com",
+            "homepage": "http://spiechu.pl"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/spiechu/JSON-Disk-Cache.git"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Spiechu": "src/"
+        }
+    }
+}
