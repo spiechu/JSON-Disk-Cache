@@ -307,9 +307,8 @@ class JSONDiskCache
     public function set($name, $value, $validTime = null)
     {
         $name = $this->getHashKey($name);
-        $validTime = ($validTime === null) ? $this->_validTime : (int) $validTime;
-        $this->_cache[$this->_domain][$name]['time'] = time();
-        $this->_cache[$this->_domain][$name]['validFor'] = $validTime;
+        $validTime = $validTime ?: $this->_validTime;
+        $this->_cache[$this->_domain][$name]['validFor'] = time() + $validTime;
         $this->_cache[$this->_domain][$name]['unserialized'] = $value;
 
         return $this;
@@ -425,7 +424,7 @@ class JSONDiskCache
     {
         $name = $this->getHashKey($name);
 
-        return $this->_cache[$this->_domain][$name]['time'] + $this->_cache[$this->_domain][$name]['validFor'] >= time();
+        return $this->_cache[$this->_domain][$name]['validFor'] >= time();
     }
 
     /**
@@ -437,22 +436,7 @@ class JSONDiskCache
      */
     public function saveCacheToFile()
     {
-        foreach ($this->_cache as $domain => $cache) {
-
-            // first try to clean up old cache
-            if (count($this->_cache[$domain]) > intval($this->_cacheFileMaxRecords * $this->_cacheFileCleanupThreshold)) {
-                $this->cleanUpCache($domain);
-            }
-
-            // if it not helps, get rid of the cache in domain
-            if (count($this->_cache[$domain]) > $this->_cacheFileMaxRecords) {
-                $this->deleteCacheFile($domain);
-                $this->_cache[$domain] = [];
-            }
-        }
-
-        // we need to start fresh loop with current cache contents since
-        // some cache entries may have been deleted
+        $this->cleanUpCache();
         foreach ($this->_cache as $domain => $cache) {
             foreach ($cache as $k => $v) {
                 if (isset($cache[$k]['unserialized'])) {
@@ -465,22 +449,58 @@ class JSONDiskCache
     }
 
     /**
-     * Cleans old cache records
-     *
-     * @param string $domain domain name to cleanup
+     * Iterates over all domains and tries to eliminate old cache entries.
      */
-    public function cleanUpCache($domain)
+    public function cleanUpCache()
     {
-        $domain = (string) $domain;
+        foreach ($this->_cache as $domain => $cache) {
+
+            // first try to clean up old cache
+            if ($this->countCacheRecords($domain) > intval($this->_cacheFileMaxRecords * $this->_cacheFileCleanupThreshold)) {
+                $this->removeOldCacheEntries($domain);
+            }
+
+            // if it not helps, get rid of the all cache in domain
+            if ($this->countCacheRecords($domain) > $this->_cacheFileMaxRecords) {
+                $this->deleteCacheFile($domain);
+                $this->_cache[$domain] = [];
+            }
+        }
+    }
+
+    /**
+     * Clean old cache records.
+     *
+     * @param string|null $domain domain name to cleanup or null to current domain
+     */
+    public function removeOldCacheEntries($domain = null)
+    {
+        $domain = $domain ?: $this->_domain;
         foreach ($this->_cache[$domain] as $k => $v) {
-            if ($v['time'] + $v['validFor'] < time()) {
+            if ($v['validFor'] < time()) {
                 unset($this->_cache[$domain][$k]);
             }
         }
     }
 
     /**
-     * Saves whole hashtable to file
+     * Counts cache records in domain.
+     *
+     * @param $domain string|null domain name to count or null to check current domain
+     * @return integer cache records
+     */
+    public function countCacheRecords($domain = null)
+    {
+        $domain = $domain ?: $this->_domain;
+        if (array_key_exists($domain, $this->_cache)) {
+            return count($this->_cache[$domain]);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Saves whole hashtable to file.
      *
      * Also checks if hashtable is not too big. In such case the whole hashtable
      * is being erased.
@@ -494,7 +514,7 @@ class JSONDiskCache
     }
 
     /**
-     * Deletes cache file according to given domain
+     * Deletes cache file according to given domain.
      *
      * @param string $domain domain name
      */
@@ -507,7 +527,7 @@ class JSONDiskCache
     }
 
     /**
-     * Makes sure all values are saved
+     * Make sure all values are saved.
      */
     public function __destruct()
     {

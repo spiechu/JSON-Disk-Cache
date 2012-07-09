@@ -268,4 +268,32 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->_jsonDiskCache->get('timed off data'));
         $this->assertSame($this->_jsonDiskCache->get('not timed off data'), 6789);
     }
+
+    /**
+     * @depends testGlobalValidCacheTime
+     */
+    public function testThresholdCleanUp()
+    {
+        $this->_jsonDiskCache->setCacheFileMaxRecords(100);
+        $this->_jsonDiskCache->setCacheFileCleanupThreshold(0.75);
+
+        // set 50 random valid values
+        $this->_jsonDiskCache->setValidTime(5);
+        for ($i = 1; $i <= 50; $i++) {
+            $this->_jsonDiskCache->set(['Valid', $i], rand(1000, 9990));
+        }
+
+        // set 26 random timed out values (1% above treshold cleanup)
+        $this->_jsonDiskCache->setValidTime(1);
+        for ($i = 1; $i <= 26; $i++) {
+            $this->_jsonDiskCache->set(['Invalid', $i], rand(1000, 9990));
+        }
+
+        $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 76, 'Total cache entries before clean up should be 76');
+
+        sleep(2);
+        $this->recreateJsonObject();
+        $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 50, 'Total cache after clean up should be 50');
+    }
+
 }
