@@ -14,6 +14,8 @@
  */
 error_reporting(E_ALL | E_STRICT);
 
+date_default_timezone_set('Europe/Warsaw');
+
 require_once __DIR__ . '/../SplClassLoader.php';
 $classLoader = new SplClassLoader('Spiechu\JSONDiskCache' , '../src');
 $classLoader->register();
