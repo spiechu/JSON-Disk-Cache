@@ -283,7 +283,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
             $this->_jsonDiskCache->set(['Valid', $i], rand(1000, 9990));
         }
 
-        // set 26 random timed out values (1% above treshold cleanup)
+        // set 26 random timed out values (1% above threshold cleanup)
         $this->_jsonDiskCache->setValidTime(1);
         for ($i = 1; $i <= 26; $i++) {
             $this->_jsonDiskCache->set(['Invalid', $i], rand(1000, 9990));
@@ -294,6 +294,18 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         sleep(2);
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 50, 'Total cache after clean up should be 50');
+    }
+    
+    public function testCacheOverflow()
+    {
+        $this->_jsonDiskCache->setCacheFileMaxRecords(100);
+        $this->_jsonDiskCache->setValidTime(5);
+        for ($i = 1; $i <= 101; $i++) {
+            $this->_jsonDiskCache->set(['Valid', $i], rand(1000, 9990));
+        }
+        
+        $this->recreateJsonObject();
+        $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 0, 'Cache should be zeroed after overflow');
     }
 
 }
