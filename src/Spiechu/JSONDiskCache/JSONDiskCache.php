@@ -16,6 +16,9 @@ namespace Spiechu\JSONDiskCache;
  *
  * There is one cache directory where can be found one cache file per domain.
  * This prevents from mixing the same cache variable names.
+ *
+ * @author Dawid Spiechowicz <spiechu@gmail.com>
+ * @since 0.1.0
  */
 class JSONDiskCache
 {
