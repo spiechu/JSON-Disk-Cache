@@ -25,12 +25,6 @@ $classLoader = new SplClassLoader('Spiechu\JSONDiskCache' , 'src');
 $classLoader->register();
 ```
 
-Also make sure You have timezone set, because `time()` function behaves inproperly in some cases:
-```php
-<?php
-date_default_timezone_set('Europe/Warsaw');
-```
-
 ## Usage
 
 At creation of `JSONDiskCache` object You can set cache directory in first param, otherwise `jsoncache` in JSONDiskCache.php directory will be set, for example:
