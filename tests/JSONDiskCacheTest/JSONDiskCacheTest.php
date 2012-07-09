@@ -13,17 +13,28 @@ namespace Spiechu\JSONDiskCacheTest;
 
 use Spiechu\JSONDiskCache\JSONDiskCache;
 
+/**
+ * @author Dawid Spiechowicz <spiechu@gmail.com>
+ * @since 0.1.0
+ */
 class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var string
+     */
     const DOMAIN = 'testdomain';
-    
+
     /**
      * Relative path to cache dir
+     *
+     * @var string
      */
     const TEST_CACHE_DIR = '/../../testcache';
 
     /**
+     * Main tested object
+     *
      * @var JsonDiskCache
      */
     protected $_jsonDiskCache;
@@ -107,6 +118,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function testIntegerValue($integer)
     {
         $this->_jsonDiskCache->set('integer', $integer);
+
         $this->assertSame($this->_jsonDiskCache->get('integer'), $integer);
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->get('integer'), $integer);
@@ -123,6 +135,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function testStringValue($string)
     {
         $this->_jsonDiskCache->set('string', $string);
+
         $this->assertSame($this->_jsonDiskCache->get('string'), $string);
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->get('string'), $string);
@@ -139,6 +152,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function testArrayValue($array)
     {
         $this->_jsonDiskCache->set('array', $array);
+
         $this->assertSame($this->_jsonDiskCache->get('array'), $array);
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->get('array'), $array);
@@ -162,7 +176,9 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $object->val3 = [0,1,2,'0','1','2'];
         $object->val4 = self::$_integerTestValues;
         $object->val5 = self::$_stringTestValues;
+
         $this->_jsonDiskCache->set('object', $object);
+
         $this->assertSame($this->_jsonDiskCache->get('object'), $object);
         $this->recreateJsonObject();
         $this->assertEquals($this->_jsonDiskCache->get('object'), $object);
@@ -171,6 +187,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function testGetSetFunctionFetchWithoutParams()
     {
         $this->_jsonDiskCache->getSet('function without params', [$this, 'fetchWithoutParams']);
+
         $this->assertSame($this->_jsonDiskCache->get('function without params'), $this->fetchWithoutParams());
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->get('function without params'), $this->fetchWithoutParams());
@@ -182,6 +199,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function fetchWithoutParams()
     {
         static $execution = 0;
+
         $this->assertNotEquals($execution, 3);
         $execution++;
 
@@ -191,6 +209,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function testGetSetFunctionFetchWithOneParam()
     {
         $this->_jsonDiskCache->getSet(['function with one param', 159], [$this, 'fetchWithOneParam', 159]);
+
         $this->assertSame($this->_jsonDiskCache->get(['function with one param', 159]), $this->fetchWithOneParam(159));
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->get(['function with one param', 159]), $this->fetchWithOneParam(159));
@@ -202,7 +221,9 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function fetchWithOneParam($param)
     {
         $this->assertSame($param, 159);
+
         static $execution = 0;
+
         $this->assertNotEquals($execution, 3);
         $execution++;
 
@@ -212,10 +233,12 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     public function testClearCache()
     {
         $this->_jsonDiskCache->set('clearme', 'value');
+
         $this->assertTrue($this->_jsonDiskCache->clear('clearme'));
         $this->assertNull($this->_jsonDiskCache->get('clearme'));
 
         $this->_jsonDiskCache->set('clearme', 'value');
+
         $this->recreateJsonObject();
         $this->assertTrue($this->_jsonDiskCache->clear('clearme'));
         $this->assertNull($this->_jsonDiskCache->get('clearme'));
