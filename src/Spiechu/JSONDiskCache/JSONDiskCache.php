@@ -94,7 +94,7 @@ class JSONDiskCache
     /**
      * Checks if hash file exists, creates it when not, reads the file contents
      *
-     * @throws JsonDiskCacheException when hash file is not file, not readable/writable
+     * @throws JSONDiskCacheException when hash file is not file, not readable/writable
      */
     protected function setupHashFile()
     {
@@ -104,14 +104,14 @@ class JSONDiskCache
                 touch($hashFile);
                 chmod($hashFile, self::HASH_FILE_PERMS);
             } catch (\Exception $e) {
-                throw new JsonDiskCacheException($e->getMessage());
+                throw new JSONDiskCacheException($e->getMessage());
             }
         }
         if (!$hashFile->isFile()) {
-            throw new JsonDiskCacheException("{$hashFile->getFilename()} is not a file");
+            throw new JSONDiskCacheException("{$hashFile->getFilename()} is not a file");
         }
         if (!($hashFile->isReadable() || $hashFile->isWritable())) {
-            throw new JsonDiskCacheException("{$hashFile->getFilename()} is not readable or writable");
+            throw new JSONDiskCacheException("{$hashFile->getFilename()} is not readable or writable");
         }
         $hashFileContents = json_decode(file_get_contents($hashFile), true);
         $this->_hashTable = ($hashFileContents === null) ? [] : $hashFileContents;
@@ -178,7 +178,7 @@ class JSONDiskCache
     /**
      * Creates new dir if not exist from $this->_cacheDir path
      *
-     * @throws JsonDiskCacheException when $this->_cacheDir is not a dir or is not readable/writable
+     * @throws JSONDiskCacheException when $this->_cacheDir is not a dir or is not readable/writable
      */
     protected function setupCacheDir()
     {
@@ -187,13 +187,13 @@ class JSONDiskCache
             try {
                 mkdir($dir, self::CACHE_DIR_PERMS);
             } catch (\Exception $e) {
-                throw new JsonDiskCacheException($e->getMessage());
+                throw new JSONDiskCacheException($e->getMessage());
             }
         }
         if (!$dir->isDir())
-            throw new JsonDiskCacheException("{$this->_cacheDir} is not a dir");
+            throw new JSONDiskCacheException("{$this->_cacheDir} is not a dir");
         if (!($dir->isReadable() || $dir->isWritable()))
-            throw new JsonDiskCacheException("{$this->_cacheDir} is not readable or writable");
+            throw new JSONDiskCacheException("{$this->_cacheDir} is not readable or writable");
     }
 
     /**
@@ -202,7 +202,7 @@ class JSONDiskCache
      * Creates a new file when not found
      *
      * @return string                 full path to cache file
-     * @throws JsonDiskCacheException when not a file or is not readable/writable
+     * @throws JSONDiskCacheException when not a file or is not readable/writable
      */
     protected function setupCacheFile()
     {
@@ -212,14 +212,14 @@ class JSONDiskCache
                 touch($file);
                 chmod($file, self::CACHE_FILE_PERMS);
             } catch (\Exception $e) {
-                throw new JsonDiskCacheException($e->getMessage());
+                throw new JSONDiskCacheException($e->getMessage());
             }
         }
         if (!$file->isFile()) {
-            throw new JsonDiskCacheException("{$file->getFilename()} is not a file");
+            throw new JSONDiskCacheException("{$file->getFilename()} is not a file");
         }
         if (!($file->isReadable() || $file->isWritable())) {
-            throw new JsonDiskCacheException("{$file->getFilename()} is not readable or writable");
+            throw new JSONDiskCacheException("{$file->getFilename()} is not readable or writable");
         }
 
         return $file;

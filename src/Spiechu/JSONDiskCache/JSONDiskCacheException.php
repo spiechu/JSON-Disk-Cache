@@ -9,8 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Spiechu\JsonDiskCache;
+namespace Spiechu\JSONDiskCache;
 
+/**
+ * @author Dawid Spiechowicz <spiechu@gmail.com>
+ * @since 0.1.0 
+ */
 class JSONDiskCacheException extends \Exception {
 
 }
