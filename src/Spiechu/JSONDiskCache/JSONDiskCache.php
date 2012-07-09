@@ -34,14 +34,35 @@ class JSONDiskCache
     const HASH_FILE_MAX_RECORDS = 1000;
 
     /**
-     * Global valid time value in seconds
+     * Global valid time value in seconds.
      *
      * @var integer
      */
     protected $_validTime = self::DEFAULT_VALID_TIME;
 
     /**
-     * Current cache namespace domain
+     * Max records per domain (file).
+     *
+     * @var integer
+     */
+    protected $_cacheFileMaxRecords = self::CACHE_FILE_MAX_RECORDS;
+
+    /**
+     * Threshold to trigger cleaning up domain.
+     *
+     * @var float values from 0.1 to 0.9
+     */
+    protected $_cacheFileCleanupThreshold = self::CACHE_FILE_CLEANUP_THRESHOLD;
+
+    /**
+     * Hash keys lookup table max size.
+     *
+     * @var integer
+     */
+    protected $_hashFileMaxRecords = self::HASH_FILE_MAX_RECORDS;
+
+    /**
+     * Current cache namespace domain.
      *
      * @var string
      */
@@ -123,7 +144,7 @@ class JSONDiskCache
      * This value is used when null in set() function
      *
      * @param  integer       $time
-     * @return JsonDiskCache fluent interface
+     * @return JSONDiskCache fluent interface
      */
     public function setValidTime($time)
     {
@@ -133,11 +154,50 @@ class JSONDiskCache
     }
 
     /**
+     * Sets max records per domain (file).
+     *
+     * @param  integer       $records
+     * @return JSONDiskCache fluent interface
+     */
+    public function setCacheFileMaxRecords($records)
+    {
+        $this->_cacheFileMaxRecords = (int) $records;
+
+        return $this;
+    }
+
+    /**
+     * Sets threshold to trigger cleaning up domain.
+     *
+     * @param  float         $records 0.1 to 0.9
+     * @return JSONDiskCache fluent interface
+     */
+    public function setCacheFileCleanupThreshold($threshold)
+    {
+        $this->_cacheFileCleanupThreshold = (float) $threshold;
+
+        return $this;
+    }
+
+    /**
+     * Sets hash keys lookup table max size.
+     *
+     * @param  integer       $records 0.1 to 0.9
+     * @return JSONDiskCache fluent interface
+     */
+    public function setHashFileMaxRecords($records)
+    {
+        $this->_hashFileMaxRecords = (int) $records;
+
+        return $this;
+    }
+
+    /**
      * Sets current domain, reads from cache file when domain name not read before
      *
      * @param string $domain domain to set
      * @param boolean optional flag to force read from cache file
-     * @return JsonDiskCache fluent interface
+     * @return JSONDiskCache fluent interface
      */
     public function setDomain($domain, $forceFetch = false)
     {
@@ -242,7 +302,7 @@ class JSONDiskCache
      * @param  string|array  $name      cache name to set or array with name and params
      * @param  mixed         $value     cache value to set
      * @param  integer|null  $validTime $this->_validTime is used when set to null
-     * @return JsonDiskCache fluent interface
+     * @return JSONDiskCache fluent interface
      */
     public function set($name, $value, $validTime = null)
     {
@@ -372,17 +432,22 @@ class JSONDiskCache
      * Saves all domains to separate files
      *
      * Also checks if cache number is not over max limit or cleanup limit
+     *
+     * @todo improve decision what to do when cache is still over the max limit (log WARNING maybe?)
      */
     public function saveCacheToFile()
     {
         foreach ($this->_cache as $domain => $cache) {
-            if (count($this->_cache[$domain]) > self::CACHE_FILE_MAX_RECORDS) {
-                $this->deleteCacheFile($domain);
-                $this->_cache[$domain] = [];
+
+            // first try to clean up old cache
+            if (count($this->_cache[$domain]) > intval($this->_cacheFileMaxRecords * $this->_cacheFileCleanupThreshold)) {
+                $this->cleanUpCache($domain);
             }
 
-            if (count($this->_cache[$domain]) > intval(self::CACHE_FILE_MAX_RECORDS * self::CACHE_FILE_CLEANUP_THRESHOLD)) {
-                $this->cleanUpCache($domain);
+            // if it not helps, get rid of the cache in domain
+            if (count($this->_cache[$domain]) > $this->_cacheFileMaxRecords) {
+                $this->deleteCacheFile($domain);
+                $this->_cache[$domain] = [];
             }
         }
 
@@ -422,7 +487,7 @@ class JSONDiskCache
      */
     public function saveHashTableToFile()
     {
-        if (count($this->_hashTable) > self::HASH_FILE_MAX_RECORDS) {
+        if (count($this->_hashTable) > $this->_hashFileMaxRecords) {
             $this->_hashTable = [];
         }
         file_put_contents($this->_cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILENAME . '.' . self::CACHE_FILE_EXTENSION, json_encode($this->_hashTable));
