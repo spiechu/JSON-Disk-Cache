@@ -26,28 +26,28 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     const DOMAIN = 'testdomain';
 
     /**
-     * Relative path to cache dir
+     * Relative path to cache dir.
      *
      * @var string
      */
     const TEST_CACHE_DIR = '/../../testcache';
 
     /**
-     * Main tested object
+     * Main tested object.
      *
      * @var JsonDiskCache
      */
     protected $_jsonDiskCache;
 
     /**
-     * Full path to cache dir
+     * Full path to cache dir.
      *
      * @var string
      */
     protected $_cacheDirPath;
 
     /**
-     * Integer values to test
+     * Integer values to test.
      *
      * Uses PHP 5.4 array shorthand creation
      *
@@ -56,7 +56,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     protected static $_integerTestValues = [[-12345], [-5], [0], [5], [12345]];
 
     /**
-     * String values to test
+     * String values to test.
      *
      * @var array
      */
@@ -87,7 +87,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Forces cache object to write cache data to files
+     * Forces cache object to write cache data to files.
      */
     protected function recreateJsonObject()
     {
@@ -194,7 +194,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Method can be executed only 3 times
+     * Method can be executed only 3 times.
      */
     public function fetchWithoutParams()
     {
@@ -216,7 +216,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Method can be executed only 3 times
+     * Method can be executed only 3 times.
      */
     public function fetchWithOneParam($param)
     {
@@ -242,5 +242,30 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $this->recreateJsonObject();
         $this->assertTrue($this->_jsonDiskCache->clear('clearme'));
         $this->assertNull($this->_jsonDiskCache->get('clearme'));
+    }
+
+    /**
+     * @depends testIntegerValue
+     */
+    public function testGlobalValidCacheTime()
+    {
+        $this->_jsonDiskCache->setValidTime(1);
+        $this->_jsonDiskCache->set('timed off data', 12345);
+
+        sleep(2);
+        $this->assertNull($this->_jsonDiskCache->get('timed off data'));
+    }
+
+    /**
+     * @depends testIntegerValue
+     */
+    public function testFunctionValidCacheTime()
+    {
+        $this->_jsonDiskCache->set('timed off data', 12345, 1);
+        $this->_jsonDiskCache->set('not timed off data', 6789, 2);
+
+        sleep(2);
+        $this->assertNull($this->_jsonDiskCache->get('timed off data'));
+        $this->assertSame($this->_jsonDiskCache->get('not timed off data'), 6789);
     }
 }
