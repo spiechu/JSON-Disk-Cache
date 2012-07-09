@@ -35,7 +35,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     /**
      * Main tested object.
      *
-     * @var JsonDiskCache
+     * @var JSONDiskCache
      */
     protected $_jsonDiskCache;
 
@@ -70,7 +70,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        // make sure JsonDiskCache writes all to files
+        // make sure JSONDiskCache writes all to files
         unset($this->_jsonDiskCache);
 
         foreach (scandir($this->_cacheDirPath) as $file) {
@@ -92,7 +92,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     protected function recreateJsonObject()
     {
         unset($this->_jsonDiskCache);
-        $this->_jsonDiskCache = new JsonDiskCache($this->_cacheDirPath, self::DOMAIN);
+        $this->_jsonDiskCache = new JSONDiskCache($this->_cacheDirPath, self::DOMAIN);
     }
 
     public function testCurrentDomain()
@@ -295,7 +295,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 50, 'Total cache after clean up should be 50');
     }
-    
+
     public function testCacheOverflow()
     {
         $this->_jsonDiskCache->setCacheFileMaxRecords(100);
@@ -303,7 +303,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         for ($i = 1; $i <= 101; $i++) {
             $this->_jsonDiskCache->set(['Valid', $i], rand(1000, 9990));
         }
-        
+
         $this->recreateJsonObject();
         $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 0, 'Cache should be zeroed after overflow');
     }
