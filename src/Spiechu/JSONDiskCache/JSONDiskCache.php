@@ -76,28 +76,28 @@ class JSONDiskCache
     protected $_domain;
 
     /**
-     * Full path to cache dir
+     * Full path to cache dir.
      *
      * @var string
      */
     protected $_cacheDir;
 
     /**
-     * Main cache
+     * Main cache array.
      *
      * @var array
      */
     protected $_cache = [];
 
     /**
-     * Helper table to faster resolve often used hashes
+     * Helper table to faster resolve often used hashes.
      *
      * @var array
      */
     protected $_hashTable;
 
     /**
-     * Keeps track if domain was already fetched from file
+     * Keeps track if domain was already fetched from file.
      *
      * @var array
      */
@@ -120,7 +120,7 @@ class JSONDiskCache
     }
 
     /**
-     * Checks if hash file exists, creates it when not, reads the file contents
+     * Checks if hash file exists, creates it when not, reads the file contents.
      *
      * @throws JSONDiskCacheException when hash file is not file, not readable/writable
      */
@@ -146,7 +146,7 @@ class JSONDiskCache
     }
 
     /**
-     * Sets global valid time in seconds
+     * Sets global valid time in seconds.
      *
      * This value is used when null in set() function
      *
@@ -176,7 +176,7 @@ class JSONDiskCache
     /**
      * Sets threshold to trigger cleaning up domain.
      *
-     * @param  float         $records 0.1 to 0.9
+     * @param  float         $threshold 0.1 to 0.9
      * @return JSONDiskCache fluent interface
      */
     public function setCacheFileCleanupThreshold($threshold)
@@ -189,7 +189,7 @@ class JSONDiskCache
     /**
      * Sets hash keys lookup table max size.
      *
-     * @param  integer       $records 0.1 to 0.9
+     * @param  integer       $records
      * @return JSONDiskCache fluent interface
      */
     public function setHashFileMaxRecords($records)
@@ -200,10 +200,10 @@ class JSONDiskCache
     }
 
     /**
-     * Sets current domain, reads from cache file when domain name not read before
+     * Sets current domain, reads from cache file when domain name not read before.
      *
-     * @param string $domain domain to set
-     * @param boolean optional flag to force read from cache file
+     * @param  string        $domain domain to set
+     * @param  boolean       $forceFetch optional flag to force read from cache file
      * @return JSONDiskCache fluent interface
      */
     public function setDomain($domain, $forceFetch = false)
@@ -222,7 +222,7 @@ class JSONDiskCache
     }
 
     /**
-     * Gets current domain name
+     * Gets current domain name.
      *
      * @return string
      */
@@ -232,7 +232,7 @@ class JSONDiskCache
     }
 
     /**
-     * Reads file contents and adds to cache array
+     * Reads file contents and adds to cache array.
      *
      * @param string $file full path to file to fetch from
      */
@@ -243,7 +243,7 @@ class JSONDiskCache
     }
 
     /**
-     * Creates new dir if not exist from $this->_cacheDir path
+     * Creates new dir if not exist from $this->_cacheDir path.
      *
      * @throws JSONDiskCacheException when $this->_cacheDir is not a dir or is not readable/writable
      */
@@ -264,9 +264,9 @@ class JSONDiskCache
     }
 
     /**
-     * Checks if cache file exists and is ready to read/write
+     * Checks if cache file exists and is ready to read/write.
      *
-     * Creates a new file when not found
+     * Creates a new file when not found.
      *
      * @return string                 full path to cache file
      * @throws JSONDiskCacheException when not a file or is not readable/writable
@@ -293,7 +293,7 @@ class JSONDiskCache
     }
 
     /**
-     * Returns full path to cache file according to current domain
+     * Returns full path to cache file according to current domain.
      *
      * @param  string $filename
      * @return string full path to file
@@ -304,7 +304,7 @@ class JSONDiskCache
     }
 
     /**
-     * Sets name and value to cache
+     * Sets name and value to cache.
      *
      * @param  string|array  $name      cache name to set or array with name and params
      * @param  mixed         $value     cache value to set
@@ -322,7 +322,7 @@ class JSONDiskCache
     }
 
     /**
-     * Gets value from cache
+     * Gets value from cache.
      *
      * @param  string|array $name cache name in current domain or array with name and params
      * @return mixed        value from cache or null when not found or not valid
@@ -345,7 +345,7 @@ class JSONDiskCache
     }
 
     /**
-     * Shorthand method to get cached value and set if cache is not valid
+     * Shorthand method to get cached value and set if cache is not valid.
      *
      * @param  string|array $name            cache name in current domain or array with name and params
      * @param  array        $objectAndMethod function name to execute to retrieve the value to set or array with object[name] and method name to execute
@@ -374,7 +374,7 @@ class JSONDiskCache
     }
 
     /**
-     * Checks if name is present in current domain
+     * Checks if name is present in current domain.
      *
      * @param  string|array $name cache name in current domain or array with name and params
      * @return boolean      true when name is present
@@ -385,7 +385,7 @@ class JSONDiskCache
     }
 
     /**
-     * Clears cache entry
+     * Clears cache entry.
      *
      * @param  string|array $name cache name in current domain or array with name and params
      * @return boolean      true when entry has been found and deleted
@@ -402,7 +402,7 @@ class JSONDiskCache
     }
 
     /**
-     * Returns sha1 hash from name
+     * Returns sha1 hash from name.
      *
      * @param  string|array cache name or array with name and params
      * @return string hash form $name
@@ -422,7 +422,7 @@ class JSONDiskCache
     }
 
     /**
-     * Checks if cache value is not too old
+     * Checks if cache value is not too old.
      *
      * @param  string|array $name cache name in current domain or array with name and params
      * @return boolean      true when cache value is valid
@@ -435,9 +435,9 @@ class JSONDiskCache
     }
 
     /**
-     * Saves all domains to separate files
+     * Saves all domains to separate files.
      *
-     * Also checks if cache number is not over max limit or cleanup limit
+     * Also checks if cache number is not over max limit or cleanup limit.
      *
      * @todo improve decision what to do when cache is still over the max limit (log WARNING maybe?)
      */
