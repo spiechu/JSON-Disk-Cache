@@ -346,12 +346,14 @@ class JSONDiskCache
 
     /**
      * Shorthand method to get cached value and set if cache is not valid.
+     * 
+     * TODO: make more readable executing object->method(param)
+     * TODO: add more than 2 possible params
      *
      * @param  string|array $name            cache name in current domain or array with name and params
      * @param  array        $objectAndMethod function name to execute to retrieve the value to set or array with object[name] and method name to execute
      * @param  integer|null $validTime       $this->_validTime is used when set to null
      * @return mixed        cached value
-     * @todo make more readable executing object->method(param)
      */
     public function getSet($name, $objectAndMethod, $validTime = null)
     {
@@ -438,8 +440,6 @@ class JSONDiskCache
      * Saves all domains to separate files.
      *
      * Also checks if cache number is not over max limit or cleanup limit.
-     *
-     * @todo improve decision what to do when cache is still over the max limit (log WARNING maybe?)
      */
     public function saveCacheToFile()
     {
@@ -457,6 +457,8 @@ class JSONDiskCache
 
     /**
      * Iterates over all domains and tries to eliminate old cache entries.
+     *
+     * TODO: improve decision what to do when cache entries are still over the max acceptable limit (log WARNING to increase max entries limit maybe?)
      */
     public function cleanUpCache()
     {
