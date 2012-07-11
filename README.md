@@ -83,3 +83,30 @@ Suppose You have `$db` object that retrieves data from database with `$db->fetch
 <?php
 $value = JSONDiskCache->getSet(['dataName', 1], [$db, 'fetchData', 1]);
 ```
+
+To save cache to a file just do nothing. Just before object is being destroyed, its destructor will save cache to cache files. To force file write You can do:
+
+```php
+<?php
+
+// this will work, but You lost object too
+unset($JSONDiskCache);
+
+// save only hashes
+$JSONDiskCache->saveHashTableToFile();
+
+// save cache to file
+$JSONDiskCache->saveCacheToFile();
+```
+
+Before cache is written to file, some maintenance is being performed automatically when cache entries numbers are above threshold. You can always do a function call:
+
+```php
+<?php
+
+// iterates over all domains and tries to eliminate old cache entries
+$JSONDiskCache->cleanUpCache();
+
+// clean only certain domain
+$JSONDiskCache->removeOldCacheEntries('domain to clean');
+```
