@@ -9,11 +9,5 @@
  * file that was distributed with this source code.
  */
 
-/*
- * Include STRICT error reporting.
- */
-error_reporting(E_ALL | E_STRICT);
-
-require_once __DIR__ . '/../SplClassLoader.php';
-$classLoader = new SplClassLoader('Spiechu\JSONDiskCache' , '../src');
-$classLoader->register();
+$loader = require_once __DIR__ . "/../vendor/autoload.php";
+$loader->add('Spiechu\\', __DIR__);
