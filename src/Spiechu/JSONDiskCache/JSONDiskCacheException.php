@@ -15,6 +15,6 @@ namespace Spiechu\JSONDiskCache;
  * @author Dawid Spiechowicz <spiechu@gmail.com>
  * @since 0.1.0
  */
-class JSONDiskCacheException extends \Exception {
-
+class JSONDiskCacheException extends \Exception
+{
 }

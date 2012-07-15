@@ -202,7 +202,7 @@ class JSONDiskCache
     /**
      * Sets current domain, reads from cache file when domain name not read before.
      *
-     * @param  string        $domain domain to set
+     * @param  string        $domain     domain to set
      * @param  boolean       $forceFetch optional flag to force read from cache file
      * @return JSONDiskCache fluent interface
      */
@@ -346,7 +346,7 @@ class JSONDiskCache
 
     /**
      * Shorthand method to get cached value and set if cache is not valid.
-     * 
+     *
      * TODO: make more readable executing object->method(param)
      * TODO: add more than 2 possible params
      *
