@@ -81,7 +81,7 @@ Suppose You have `$db` object that retrieves data from database with `$db->fetch
 
 ```php
 <?php
-$value = JSONDiskCache->getSet(['dataName', 1], [$db, 'fetchData', 1]);
+$value = JSONDiskCache->getSet(['dataName', 1], [$db, 'fetchData'], [1]);
 ```
 
 To save cache to a file just do nothing. Just before object is being destroyed, its destructor will save cache to cache files. To force file write You can do:
