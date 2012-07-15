@@ -4,6 +4,9 @@ Cache class intended to keep serialized data in JSON format files.
 
 There is one cache directory per all domains. `hashtable.cache` keeps cache hashes of all domains. `domain.cache` keeps hashes with serialized data.
 
+Travis build status:
+[![Build Status](https://secure.travis-ci.org/spiechu/JSON-Disk-Cache.png)](http://travis-ci.org/spiechu/JSON-Disk-Cache)
+
 ## Features
 
 Class caches data on disk using JSON format. Uses typical methods `set()`, `get()`, `clear()`.
