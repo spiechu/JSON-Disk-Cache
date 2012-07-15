@@ -235,7 +235,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetFunctionFetchWithOneParam()
     {
-        $this->_jsonDiskCache->getSet(['function with one param', 159], [$this, 'fetchWithOneParam', 159]);
+        $this->_jsonDiskCache->getSet(['function with one param', 159], [$this, 'fetchWithOneParam'], [159]);
 
         $this->assertSame($this->_jsonDiskCache->get(['function with one param', 159]), $this->fetchWithOneParam(159));
         $this->recreateJsonObject();

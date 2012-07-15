@@ -347,26 +347,21 @@ class JSONDiskCache
     /**
      * Shorthand method to get cached value and set if cache is not valid.
      *
-     * TODO: make more readable executing object->method(param)
-     * TODO: add more than 2 possible params
-     *
      * @param  string|array $name            cache name in current domain or array with name and params
-     * @param  array        $objectAndMethod function name to execute to retrieve the value to set or array with object[name] and method name to execute
+     * @param  string|array $objectAndMethod function name/array with object and method name to execute to retrieve the value to set
+     * @param  array|null   $params          $params to pass to $objectAndMethod function
      * @param  integer|null $validTime       $this->_validTime is used when set to null
-     * @return mixed        cached value
+     * @return mixed|null   value from cache or null when not found or not valid
      */
-    public function getSet($name, $objectAndMethod, $validTime = null)
+    public function getSet($name, $objectAndMethod, array $params = null, $validTime = null)
     {
         $returnValue = $this->get($name);
         if ($returnValue === null) {
-            if (array_key_exists(2, $objectAndMethod)) {
-                if (array_key_exists(3, $objectAndMethod)) {
-                    $this->set($name, $objectAndMethod[0]->$objectAndMethod[1]($objectAndMethod[2], $objectAndMethod[3]), $validTime);
-                } else {
-                    $this->set($name, $objectAndMethod[0]->$objectAndMethod[1]($objectAndMethod[2]), $validTime);
-                }
+            $params = $params ?: [];
+            if (is_array($objectAndMethod) || is_string($objectAndMethod)) {
+                $this->set($name, call_user_func_array($objectAndMethod, $params), $validTime);
             } else {
-                $this->set($name, $objectAndMethod[0]->$objectAndMethod[1](), $validTime);
+                throw new JSONDiskCacheException('$objectAndMethod must be string or array');
             }
         } else {
             return $returnValue;
