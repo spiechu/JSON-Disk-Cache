@@ -3,13 +3,14 @@
     "description": "Cache class intended to keep serialized data in JSON format files",
     "type": "library",
     "license": "MIT",
-    "keywords": ["cache", "json"],
+    "keywords": ["cache", "caching", "json"],
     "homepage": "https://github.com/spiechu/JSON-Disk-Cache",
     "authors": [
         {
             "name": "Dawid Spiechowicz",
             "email": "spiechu@gmail.com",
-            "homepage": "http://spiechu.pl"
+            "homepage": "http://spiechu.pl",
+            "role": "Developer"
         }
     ],
     "require": {
