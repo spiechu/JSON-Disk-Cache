@@ -73,8 +73,10 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         // make sure JSONDiskCache writes all to files
         unset($this->_jsonDiskCache);
 
+        // scan through cache dir and delete all '.cache' files
         foreach (scandir($this->_cacheDirPath) as $file) {
             if ($file !== '.' && $file !== '..' &&
+
             // PHP 5.4 (new Object)->method() call in one line
             (new \SplFileInfo($this->_cacheDirPath . '/' . $file))->getExtension() === 'cache') {
                 unlink($this->_cacheDirPath . '/' . $file);
@@ -95,11 +97,18 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $this->_jsonDiskCache = new JSONDiskCache($this->_cacheDirPath, self::DOMAIN);
     }
 
+    /**
+     * @covers JSONDiskCache::getDomain
+     */
     public function testCurrentDomain()
     {
         $this->assertSame($this->_jsonDiskCache->getDomain(), self::DOMAIN);
     }
 
+    /**
+     * @covers JSONDiskCache::setupCacheDir
+     * @covers JSONDiskCache::setupHashFile
+     */
     public function testCacheFilesCreation()
     {
         $this->assertFileExists(
@@ -114,6 +123,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider integerValuesProvider
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::get
      */
     public function testIntegerValue($integer)
     {
@@ -131,6 +142,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider stringValuesProvider
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::get
      */
     public function testStringValue($string)
     {
@@ -148,6 +161,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider arrayValuesProvider
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::get
      */
     public function testArrayValue($array)
     {
@@ -168,6 +183,10 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         return $valuesArray;
     }
 
+    /**
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::get
+     */
     public function testObjectCache()
     {
         $object = new \stdClass();
@@ -184,6 +203,10 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->_jsonDiskCache->get('object'), $object);
     }
 
+    /**
+     * @covers JSONDiskCache::getSet
+     * @covers JSONDiskCache::get
+     */
     public function testGetSetFunctionFetchWithoutParams()
     {
         $this->_jsonDiskCache->getSet('function without params', [$this, 'fetchWithoutParams']);
@@ -206,6 +229,10 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         return 'This is my fetched value';
     }
 
+    /**
+     * @covers JSONDiskCache::getSet
+     * @covers JSONDiskCache::get
+     */
     public function testGetSetFunctionFetchWithOneParam()
     {
         $this->_jsonDiskCache->getSet(['function with one param', 159], [$this, 'fetchWithOneParam', 159]);
@@ -230,6 +257,11 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         return 'This is my fetched value with one param';
     }
 
+    /**
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::get
+     * @covers JSONDiskCache::clear
+     */
     public function testClearCache()
     {
         $this->_jsonDiskCache->set('clearme', 'value');
@@ -246,6 +278,9 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testIntegerValue
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::setValidTime
+     * @covers JSONDiskCache::get
      */
     public function testGlobalValidCacheTime()
     {
@@ -258,6 +293,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testIntegerValue
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::get
      */
     public function testFunctionValidCacheTime()
     {
@@ -271,6 +308,11 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testGlobalValidCacheTime
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::setCacheFileMaxRecords
+     * @covers JSONDiskCache::setCacheFileCleanupThreshold
+     * @covers JSONDiskCache::setValidTime
+     * @covers JSONDiskCache::countCacheRecords
      */
     public function testThresholdCleanUp()
     {
@@ -296,6 +338,13 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->_jsonDiskCache->countCacheRecords(), 50, 'Total cache after clean up should be 50');
     }
 
+    /**
+     * @depends testGlobalValidCacheTime
+     * @covers JSONDiskCache::set
+     * @covers JSONDiskCache::setCacheFileMaxRecords
+     * @covers JSONDiskCache::setValidTime
+     * @covers JSONDiskCache::countCacheRecords
+     */
     public function testCacheOverflow()
     {
         $this->_jsonDiskCache->setCacheFileMaxRecords(100);
