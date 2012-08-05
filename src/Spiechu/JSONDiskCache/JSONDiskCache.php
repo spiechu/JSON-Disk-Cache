@@ -126,7 +126,9 @@ class JSONDiskCache
      */
     protected function setupHashFile()
     {
-        $hashFile = new \SplFileInfo($this->_cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION);
+        $hashFile = new \SplFileInfo(
+                $this->_cacheDir . DIRECTORY_SEPARATOR
+                . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION);
         if (!file_exists($hashFile)) {
             try {
                 touch($hashFile);
@@ -257,10 +259,12 @@ class JSONDiskCache
                 throw new JSONDiskCacheException($e->getMessage());
             }
         }
-        if (!$dir->isDir())
+        if (!$dir->isDir()) {
             throw new JSONDiskCacheException("{$this->_cacheDir} is not a dir");
-        if (!($dir->isReadable() || $dir->isWritable()))
+        }
+        if (!($dir->isReadable() || $dir->isWritable())) {
             throw new JSONDiskCacheException("{$this->_cacheDir} is not readable or writable");
+        }
     }
 
     /**
@@ -333,7 +337,8 @@ class JSONDiskCache
             $nameHash = $this->getHashKey($name);
             if ($this->isCacheValid($name)) {
                 if (!isset($this->_cache[$this->_domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY])) {
-                    $this->_cache[$this->_domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY] = unserialize($this->_cache[$this->_domain][$nameHash][self::CACHE_FILE_SERIALIZED_KEY]);
+                    $this->_cache[$this->_domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY]
+                            = unserialize($this->_cache[$this->_domain][$nameHash][self::CACHE_FILE_SERIALIZED_KEY]);
                 }
 
                 return $this->_cache[$this->_domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY];
@@ -347,10 +352,11 @@ class JSONDiskCache
     /**
      * Shorthand method to get cached value and set if cache is not valid.
      *
-     * @param  string|array $name            cache name in current domain or array with name and params
-     * @param  string|array $objectAndMethod function name/array with object and method name to execute to retrieve the value to set
-     * @param  array|null   $params          $params to pass to $objectAndMethod function
-     * @param  integer|null $validTime       $this->_validTime is used when set to null
+     * @param string|array $name            cache name in current domain or array with name and params
+     * @param string|array $objectAndMethod function name/array with object and method name
+     *                                       to execute to retrieve the value to set
+     * @param  array|null   $params    $params to pass to $objectAndMethod function
+     * @param  integer|null $validTime $this->_validTime is used when set to null
      * @return mixed|null   value from cache or null when not found or not valid
      */
     public function getSet($name, $objectAndMethod, array $params = null, $validTime = null)
@@ -442,7 +448,8 @@ class JSONDiskCache
         foreach ($this->_cache as $domain => $cache) {
             foreach ($cache as $k => $v) {
                 if (isset($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY])) {
-                    $cache[$k][self::CACHE_FILE_SERIALIZED_KEY] = serialize($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY]);
+                    $cache[$k][self::CACHE_FILE_SERIALIZED_KEY]
+                            = serialize($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY]);
                     unset($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY]);
                 }
             }
@@ -453,14 +460,16 @@ class JSONDiskCache
     /**
      * Iterates over all domains and tries to eliminate old cache entries.
      *
-     * TODO: improve decision what to do when cache entries are still over the max acceptable limit (log WARNING to increase max entries limit maybe?)
+     * TODO: improve decision what to do when cache entries are still over the max acceptable limit
+     * (log WARNING to increase max entries limit maybe?)
      */
     public function cleanUpCache()
     {
         foreach ($this->_cache as $domain => $cache) {
 
             // first try to clean up old cache
-            if ($this->countCacheRecords($domain) > intval($this->_cacheFileMaxRecords * $this->_cacheFileCleanupThreshold)) {
+            if ($this->countCacheRecords($domain)
+                    > intval($this->_cacheFileMaxRecords * $this->_cacheFileCleanupThreshold)) {
                 $this->removeOldCacheEntries($domain);
             }
 
@@ -514,7 +523,8 @@ class JSONDiskCache
         if (count($this->_hashTable) > $this->_hashFileMaxRecords) {
             $this->_hashTable = [];
         }
-        file_put_contents($this->_cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION, json_encode($this->_hashTable));
+        file_put_contents($this->_cacheDir . DIRECTORY_SEPARATOR
+                . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION, json_encode($this->_hashTable));
     }
 
     /**
@@ -538,5 +548,5 @@ class JSONDiskCache
         $this->saveHashTableToFile();
         $this->saveCacheToFile();
     }
-
 }
+
