@@ -5,7 +5,7 @@ php:
 
 before_script:
   - pear channel-discover pear.phpunit.de
-  - pear install PHP_CodeSniffer --alldeps
+  - pear install --alldeps PHP_CodeSniffer
   - phpenv rehash
   - phpcs --standard=PSR2 src
   - composer install
