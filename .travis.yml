@@ -4,9 +4,9 @@ php:
   - 5.4
 
 before_script:
-  - pear install pear/PHP_CodeSniffer
+  - pear install PHP_CodeSniffer
   - phpenv rehash
-  - phpcs -i
+  - phpcs --standard=PSR2 src
   - composer install
 
 script: phpunit
