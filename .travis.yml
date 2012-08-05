@@ -10,4 +10,4 @@ before_script:
   - phpcs --standard=PSR2 src
   - composer install
 
-script: phpunit
+script: phpunit --coverage-text

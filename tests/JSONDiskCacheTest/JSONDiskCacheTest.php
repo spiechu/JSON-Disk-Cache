@@ -98,7 +98,7 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers JSONDiskCache::getDomain
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::getDomain
      */
     public function testCurrentDomain()
     {
@@ -106,8 +106,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers JSONDiskCache::setupCacheDir
-     * @covers JSONDiskCache::setupHashFile
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setupCacheDir
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setupHashFile
      */
     public function testCacheFilesCreation()
     {
@@ -123,8 +123,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider integerValuesProvider
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testIntegerValue($integer)
     {
@@ -142,8 +142,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider stringValuesProvider
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testStringValue($string)
     {
@@ -161,8 +161,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider arrayValuesProvider
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testArrayValue($array)
     {
@@ -184,8 +184,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testObjectCache()
     {
@@ -204,8 +204,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers JSONDiskCache::getSet
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::getSet
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testGetSetFunctionFetchWithoutParams()
     {
@@ -230,8 +230,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers JSONDiskCache::getSet
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::getSet
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testGetSetFunctionFetchWithOneParam()
     {
@@ -258,9 +258,9 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::get
-     * @covers JSONDiskCache::clear
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::clear
      */
     public function testClearCache()
     {
@@ -278,9 +278,9 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testIntegerValue
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::setValidTime
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setValidTime
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testGlobalValidCacheTime()
     {
@@ -293,8 +293,8 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testIntegerValue
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::get
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::get
      */
     public function testFunctionValidCacheTime()
     {
@@ -308,11 +308,11 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testGlobalValidCacheTime
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::setCacheFileMaxRecords
-     * @covers JSONDiskCache::setCacheFileCleanupThreshold
-     * @covers JSONDiskCache::setValidTime
-     * @covers JSONDiskCache::countCacheRecords
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setCacheFileMaxRecords
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setCacheFileCleanupThreshold
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setValidTime
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::countCacheRecords
      */
     public function testThresholdCleanUp()
     {
@@ -340,10 +340,10 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testGlobalValidCacheTime
-     * @covers JSONDiskCache::set
-     * @covers JSONDiskCache::setCacheFileMaxRecords
-     * @covers JSONDiskCache::setValidTime
-     * @covers JSONDiskCache::countCacheRecords
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::set
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setCacheFileMaxRecords
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::setValidTime
+     * @covers Spiechu\JSONDiskCache\JSONDiskCache::countCacheRecords
      */
     public function testCacheOverflow()
     {
