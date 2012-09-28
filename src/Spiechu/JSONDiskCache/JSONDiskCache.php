@@ -412,7 +412,7 @@ class JSONDiskCache
      */
     protected function getHashKey($name)
     {
-        $name = (is_array($name)) ? implode($name) : (string) $name;
+        $name = (is_array($name)) ? implode('-:-', $name) : (string) $name;
         $key = array_search($name, $this->_hashTable);
         if ($key === false) {
             $hashedName = sha1($name);
