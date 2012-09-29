@@ -18,4 +18,3 @@ namespace Spiechu\JSONDiskCache;
 class JSONDiskCacheException extends \Exception
 {
 }
-
