@@ -22,20 +22,15 @@ namespace Spiechu\JSONDiskCache;
  */
 class JSONDiskCache
 {
-
     const DEFAULT_VALID_TIME = 60;
-
     const CACHE_DIR_PERMS = 0700;
-
     const HASH_FILE_NAME = 'hashtable';
     const HASH_FILE_PERMS = 0600;
     const HASH_FILE_MAX_RECORDS = 1000;
-
     const CACHE_FILE_EXTENSION = 'cache';
     const CACHE_FILE_PERMS = 0600;
     const CACHE_FILE_MAX_RECORDS = 500;
     const CACHE_FILE_CLEANUP_THRESHOLD = 0.75;
-
     const CACHE_FILE_VALID_FOR_KEY = 1;
     const CACHE_FILE_SERIALIZED_KEY = 2;
     const CACHE_FILE_UNSERIALIZED_KEY = 3;
@@ -127,8 +122,8 @@ class JSONDiskCache
     protected function setupHashFile()
     {
         $hashFile = new \SplFileInfo(
-                $this->_cacheDir . DIRECTORY_SEPARATOR
-                . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION);
+                        $this->_cacheDir . DIRECTORY_SEPARATOR
+                        . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION);
         if (!file_exists($hashFile)) {
             try {
                 touch($hashFile);
@@ -213,10 +208,10 @@ class JSONDiskCache
         $this->_domain = (string) $domain;
         $file = $this->setupCacheFile();
         if (!array_key_exists($this->_domain, $this->_fetchedDomains)) {
-            $this->fetchDataFromFile($file);
+            $this->_cache[$this->_domain] = $this->fetchDataFromFile($file);
             $this->_fetchedDomains[$this->_domain] = 1;
         } elseif ($forceFetch) {
-            $this->fetchDataFromFile($file);
+            $this->_cache[$this->_domain] = $this->fetchDataFromFile($file);
             $this->_fetchedDomains[$this->_domain]++;
         }
 
@@ -236,12 +231,14 @@ class JSONDiskCache
     /**
      * Reads file contents and adds to cache array.
      *
-     * @param string $file full path to file to fetch from
+     * @param  string $file full path to file to fetch from
+     * @return array  fetched data
      */
     protected function fetchDataFromFile($file)
     {
         $fetchedData = json_decode(file_get_contents($file), true);
-        $this->_cache[$this->_domain] = ($fetchedData === null) ? [] : $fetchedData;
+
+        return ($fetchedData === null) ? [] : $fetchedData;
     }
 
     /**
@@ -318,7 +315,7 @@ class JSONDiskCache
     public function set($name, $value, $validTime = null)
     {
         $name = $this->getHashKey($name);
-        $validTime = $validTime ?: $this->_validTime;
+        $validTime = $validTime ? : $this->_validTime;
         $this->_cache[$this->_domain][$name][self::CACHE_FILE_VALID_FOR_KEY] = time() + $validTime;
         $this->_cache[$this->_domain][$name][self::CACHE_FILE_UNSERIALIZED_KEY] = $value;
 
@@ -363,7 +360,7 @@ class JSONDiskCache
     {
         $returnValue = $this->get($name);
         if ($returnValue === null) {
-            $params = $params ?: [];
+            $params = $params ? : [];
             if (is_array($objectAndMethod) || is_string($objectAndMethod)) {
                 $this->set($name, call_user_func_array($objectAndMethod, $params), $validTime);
             } else {
@@ -412,7 +409,7 @@ class JSONDiskCache
      */
     protected function getHashKey($name)
     {
-        $name = (is_array($name)) ? implode('-:-', $name) : (string) $name;
+        $name = (is_array($name)) ? implode('_', $name) : (string) $name;
         $key = array_search($name, $this->_hashTable);
         if ($key === false) {
             $hashedName = sha1($name);
@@ -444,6 +441,10 @@ class JSONDiskCache
      */
     public function saveCacheToFile()
     {
+        foreach ($this->_cache as $domain => $cache) {
+            $filename = $this->constructFullCacheFilenamePath($domain);
+            $this->_cache[$domain] = array_merge($this->fetchDataFromFile($filename), $this->_cache[$domain]);
+        }
         $this->cleanUpCache();
         foreach ($this->_cache as $domain => $cache) {
             foreach ($cache as $k => $v) {
@@ -453,7 +454,8 @@ class JSONDiskCache
                     unset($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY]);
                 }
             }
-            file_put_contents($this->constructFullCacheFilenamePath($domain), json_encode($cache), LOCK_EX);
+            $filename = $this->constructFullCacheFilenamePath($domain);
+            file_put_contents($filename, json_encode($cache), LOCK_EX);
         }
     }
 
@@ -473,7 +475,7 @@ class JSONDiskCache
                 $this->removeOldCacheEntries($domain);
             }
 
-            // if it not helps, get rid of the all cache in domain
+            // if it not helps, get rid of the all cache contents in domain
             if ($this->countCacheRecords($domain) > $this->_cacheFileMaxRecords) {
                 $this->deleteCacheFile($domain);
                 $this->_cache[$domain] = [];
@@ -488,7 +490,7 @@ class JSONDiskCache
      */
     public function removeOldCacheEntries($domain = null)
     {
-        $domain = $domain ?: $this->_domain;
+        $domain = $domain ? : $this->_domain;
         foreach ($this->_cache[$domain] as $k => $v) {
             if ($v[self::CACHE_FILE_VALID_FOR_KEY] < time()) {
                 unset($this->_cache[$domain][$k]);
@@ -504,7 +506,7 @@ class JSONDiskCache
      */
     public function countCacheRecords($domain = null)
     {
-        $domain = $domain ?: $this->_domain;
+        $domain = $domain ? : $this->_domain;
         if (array_key_exists($domain, $this->_cache)) {
             return count($this->_cache[$domain]);
         }
@@ -548,5 +550,5 @@ class JSONDiskCache
         $this->saveHashTableToFile();
         $this->saveCacheToFile();
     }
-}
 
+}
