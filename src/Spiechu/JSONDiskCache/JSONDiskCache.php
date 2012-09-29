@@ -27,7 +27,7 @@ class JSONDiskCache
     const HASH_FILE_NAME = 'hashtable';
     const HASH_FILE_PERMS = 0600;
     const HASH_FILE_MAX_RECORDS = 1000;
-    const CACHE_FILE_EXTENSION = 'cache';
+    const CACHE_FILE_EXT = 'cache';
     const CACHE_FILE_PERMS = 0600;
     const CACHE_FILE_MAX_RECORDS = 500;
     const CACHE_FILE_CLEANUP_THRESHOLD = 0.75;
@@ -121,7 +121,8 @@ class JSONDiskCache
      */
     protected function setupHashFile()
     {
-        $hashFile = new \SplFileInfo($this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION);
+        $fileName = $this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT;
+        $hashFile = new \SplFileInfo($fileName);
         if (!file_exists($hashFile)) {
             try {
                 touch($hashFile);
@@ -299,7 +300,7 @@ class JSONDiskCache
      */
     protected function constructFullCacheFilenamePath($filename)
     {
-        return $this->cacheDir . DIRECTORY_SEPARATOR . $filename . '.' . self::CACHE_FILE_EXTENSION;
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $filename . '.' . self::CACHE_FILE_EXT;
     }
 
     /**
@@ -523,7 +524,8 @@ class JSONDiskCache
         if (count($this->hashTable) > $this->hashFileMaxRecords) {
             $this->hashTable = [];
         }
-        file_put_contents($this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXTENSION, json_encode($this->hashTable));
+        $fileName = $this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT;
+        file_put_contents($fileName, json_encode($this->hashTable));
     }
 
     /**
