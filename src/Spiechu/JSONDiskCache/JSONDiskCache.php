@@ -24,16 +24,19 @@ class JSONDiskCache
 {
     const DEFAULT_VALID_TIME = 60;
     const CACHE_DIR_PERMS = 0700;
+    
     const HASH_FILE_NAME = 'hashtable';
     const HASH_FILE_PERMS = 0600;
     const HASH_FILE_MAX_RECORDS = 1000;
+    
     const CACHE_FILE_EXT = 'cache';
     const CACHE_FILE_PERMS = 0600;
     const CACHE_FILE_MAX_RECORDS = 500;
     const CACHE_FILE_CLEANUP_THRESHOLD = 0.75;
-    const CACHE_FILE_VALID_FOR_KEY = 1;
-    const CACHE_FILE_SERIALIZED_KEY = 2;
-    const CACHE_FILE_UNSERIALIZED_KEY = 3;
+    
+    const CACHE_FILE_KEY_VALID_FOR = 1;
+    const CACHE_FILE_KEY_SERIALIZED = 2;
+    const CACHE_FILE_KEY_UNSERIALIZED = 3;
 
     /**
      * Global valid time value in seconds.
@@ -315,8 +318,8 @@ class JSONDiskCache
     {
         $name = $this->getHashKey($name);
         $validTime = $validTime ? : $this->validTime;
-        $this->cache[$this->domain][$name][self::CACHE_FILE_VALID_FOR_KEY] = time() + $validTime;
-        $this->cache[$this->domain][$name][self::CACHE_FILE_UNSERIALIZED_KEY] = $value;
+        $this->cache[$this->domain][$name][self::CACHE_FILE_KEY_VALID_FOR] = time() + $validTime;
+        $this->cache[$this->domain][$name][self::CACHE_FILE_KEY_UNSERIALIZED] = $value;
 
         return $this;
     }
@@ -332,12 +335,12 @@ class JSONDiskCache
         if ($this->isCachePresent($name)) {
             $nameHash = $this->getHashKey($name);
             if ($this->isCacheValid($name)) {
-                if (!isset($this->cache[$this->domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY])) {
-                    $this->cache[$this->domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY]
-                            = unserialize($this->cache[$this->domain][$nameHash][self::CACHE_FILE_SERIALIZED_KEY]);
+                if (!isset($this->cache[$this->domain][$nameHash][self::CACHE_FILE_KEY_UNSERIALIZED])) {
+                    $this->cache[$this->domain][$nameHash][self::CACHE_FILE_KEY_UNSERIALIZED]
+                            = unserialize($this->cache[$this->domain][$nameHash][self::CACHE_FILE_KEY_SERIALIZED]);
                 }
 
-                return $this->cache[$this->domain][$nameHash][self::CACHE_FILE_UNSERIALIZED_KEY];
+                return $this->cache[$this->domain][$nameHash][self::CACHE_FILE_KEY_UNSERIALIZED];
             }
             unset($this->cache[$this->domain][$nameHash]);
         }
@@ -430,7 +433,7 @@ class JSONDiskCache
     {
         $name = $this->getHashKey($name);
 
-        return $this->cache[$this->domain][$name][self::CACHE_FILE_VALID_FOR_KEY] >= time();
+        return $this->cache[$this->domain][$name][self::CACHE_FILE_KEY_VALID_FOR] >= time();
     }
 
     /**
@@ -447,10 +450,10 @@ class JSONDiskCache
         $this->cleanUpCache();
         foreach ($this->cache as $domain => $cache) {
             foreach ($cache as $k => $v) {
-                if (isset($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY])) {
-                    $cache[$k][self::CACHE_FILE_SERIALIZED_KEY]
-                            = serialize($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY]);
-                    unset($cache[$k][self::CACHE_FILE_UNSERIALIZED_KEY]);
+                if (isset($cache[$k][self::CACHE_FILE_KEY_UNSERIALIZED])) {
+                    $cache[$k][self::CACHE_FILE_KEY_SERIALIZED]
+                            = serialize($cache[$k][self::CACHE_FILE_KEY_UNSERIALIZED]);
+                    unset($cache[$k][self::CACHE_FILE_KEY_UNSERIALIZED]);
                 }
             }
             $filename = $this->constructFullCacheFilenamePath($domain);
@@ -491,7 +494,7 @@ class JSONDiskCache
     {
         $domain = $domain ? : $this->domain;
         foreach ($this->cache[$domain] as $k => $v) {
-            if ($v[self::CACHE_FILE_VALID_FOR_KEY] < time()) {
+            if ($v[self::CACHE_FILE_KEY_VALID_FOR] < time()) {
                 unset($this->cache[$domain][$k]);
             }
         }
