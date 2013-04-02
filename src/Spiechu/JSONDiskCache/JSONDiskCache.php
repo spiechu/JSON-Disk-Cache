@@ -525,7 +525,7 @@ class JSONDiskCache
             $this->hashTable = [];
         }
         $fileName = $this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT;
-        file_put_contents($fileName, json_encode($this->hashTable));
+        file_put_contents($fileName, json_encode($this->hashTable), LOCK_EX);
     }
 
     /**
