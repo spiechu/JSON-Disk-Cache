@@ -24,16 +24,16 @@ class JSONDiskCache
 {
     const DEFAULT_VALID_TIME = 60;
     const CACHE_DIR_PERMS = 0700;
-    
+
     const HASH_FILE_NAME = 'hashtable';
     const HASH_FILE_PERMS = 0600;
     const HASH_FILE_MAX_RECORDS = 1000;
-    
+
     const CACHE_FILE_EXT = 'cache';
     const CACHE_FILE_PERMS = 0600;
     const CACHE_FILE_MAX_RECORDS = 500;
     const CACHE_FILE_CLEANUP_THRESHOLD = 0.75;
-    
+
     const CACHE_FILE_KEY_VALID_FOR = 1;
     const CACHE_FILE_KEY_SERIALIZED = 2;
     const CACHE_FILE_KEY_UNSERIALIZED = 3;
