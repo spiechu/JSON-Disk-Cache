@@ -10,6 +10,7 @@
  */
 
 namespace Spiechu\JSONDiskCache;
+use SplFileInfo;
 
 /**
  * Cache class intended to keep serialized data in JSON format files.
@@ -125,7 +126,7 @@ class JSONDiskCache
     protected function setupHashFile()
     {
         $fileName = $this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT;
-        $hashFile = new \SplFileInfo($fileName);
+        $hashFile = new SplFileInfo($fileName);
         if (!file_exists($hashFile)) {
             try {
                 touch($hashFile);
@@ -250,7 +251,7 @@ class JSONDiskCache
      */
     protected function setupCacheDir()
     {
-        $dir = new \SplFileInfo($this->cacheDir);
+        $dir = new SplFileInfo($this->cacheDir);
         if (!file_exists($dir)) {
             try {
                 mkdir($dir, self::CACHE_DIR_PERMS);
@@ -276,7 +277,7 @@ class JSONDiskCache
      */
     protected function setupCacheFile()
     {
-        $file = new \SplFileInfo($this->constructFullCacheFilenamePath($this->domain));
+        $file = new SplFileInfo($this->constructFullCacheFilenamePath($this->domain));
         if (!file_exists($file)) {
             try {
                 touch($file);
