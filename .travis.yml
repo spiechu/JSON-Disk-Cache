@@ -4,8 +4,14 @@ php:
   - 5.4
   - 5.5
   - hhvm
+  - hhvm-nightly
+
+matrix:
+  allow_failures:
+    - php: hhvm
 
 before_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
   - pear channel-discover pear.phpunit.de
   - pear config-set auto_discover 1
   - pear install --alldeps PHP_CodeSniffer
@@ -15,6 +21,11 @@ before_script:
   - phpcs --standard=PSR2 src
   - phpcpd src
   - phploc src
-  - composer install
+  - composer install --prefer-source --dev
 
-script: phpunit --coverage-text
+script:
+  - phpunit --coverage-text --coverage-clover=coverage.clover
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+notifications:
+  email: false
