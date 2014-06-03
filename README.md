@@ -1,11 +1,12 @@
 # JSON Disk Cache
 
+[![Build Status](https://secure.travis-ci.org/spiechu/JSON-Disk-Cache.png)](http://travis-ci.org/spiechu/JSON-Disk-Cache)
+[![Code Coverage](https://scrutinizer-ci.com/g/spiechu/JSON-Disk-Cache/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/spiechu/JSON-Disk-Cache/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spiechu/JSON-Disk-Cache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/spiechu/JSON-Disk-Cache/?branch=master)
+
 Cache class intended to keep serialized data in JSON format files.
 
 There is one cache directory per all domains. `hashtable.cache` keeps cache hashes of all domains. `domain.cache` keeps hashes with serialized data.
-
-Travis build status:
-[![Build Status](https://secure.travis-ci.org/spiechu/JSON-Disk-Cache.png)](http://travis-ci.org/spiechu/JSON-Disk-Cache)
 
 ## Features
 
