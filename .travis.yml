@@ -13,17 +13,11 @@ matrix:
 install:
   - wget https://scrutinizer-ci.com/ocular.phar
   - pear config-set auto_discover 1
-  - pear channel-discover pear.phpunit.de
-  - pear channel-discover pear.phpdoc.org
   - pear channel-discover pear.phing.info
-  - pear install --alldeps PHP_CodeSniffer
-  - pear install --alldeps pear.phpunit.de/phpcpd
-  - pear install --alldeps pear.phpunit.de/phploc
-  - pear install --alldeps phing/phing
+  - pear remote-list -c phing
+  - pear install phing/phing
   - phpcs --standard=PSR2 src
-  - phpcpd src
-  - phploc src
-  - composer install --prefer-source --dev
+  - composer install --dev
 
 before_script:
   - phpenv rehash
