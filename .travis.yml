@@ -10,22 +10,28 @@ matrix:
   allow_failures:
     - php: hhvm
 
-before_script:
+install:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - pear channel-discover pear.phpunit.de
   - pear config-set auto_discover 1
+  - pear channel-discover pear.phpunit.de
+  - pear channel-discover pear.phpdoc.org
+  - pear channel-discover pear.phing.info
   - pear install --alldeps PHP_CodeSniffer
   - pear install --alldeps pear.phpunit.de/phpcpd
   - pear install --alldeps pear.phpunit.de/phploc
-  - phpenv rehash
+  - pear install --alldeps phing/phing
   - phpcs --standard=PSR2 src
   - phpcpd src
   - phploc src
   - composer install --prefer-source --dev
 
+before_script:
+  - phpenv rehash
+
 script:
   - phpunit --coverage-text --coverage-clover=coverage.clover
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - phing
 
 notifications:
   email: false

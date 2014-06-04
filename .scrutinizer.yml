@@ -3,7 +3,7 @@ before_commands:
 
 filter:
   paths: [src/*]
-  excluded_paths: [tests/*]
+  excluded_paths: [tests/*, vendor/*]
 
 tools:
   php_cs_fixer:
