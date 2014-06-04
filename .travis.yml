@@ -16,7 +16,6 @@ install:
   - pear channel-discover pear.phing.info
   - pear remote-list -c phing
   - pear install phing/phing
-  - phpcs --standard=PSR2 src
   - composer install --dev
 
 before_script:

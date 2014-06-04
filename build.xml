@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Money" default="build">
+
+    <property name="basedir" value="${project.basedir}"/>
+    <property name="build_dir" value="${basedir}/build"/>
+    <property name="src_dir" value="${basedir}/src"/>
+    <property name="tests_dir" value="${basedir}/tests"/>
+
+    <target name="build" depends="prepare"/>
+
+    <target name="cleanup">
+        <echo msg="Deleting build dir"/>
+        <delete quiet="true" dir="${build_dir}"/>
+    </target>
+
+    <target name="prepare" depends="cleanup">
+        <echo msg="Making build dir"/>
+        <mkdir dir="${build_dir}"/>
+
+        <echo msg="Trying to set default.timezone ini (fixes Drone.io CI)"/>
+        <php expression="ini_set('date.timezone', 'Europe/Warsaw');"/>
+    </target>
+
+</project>
