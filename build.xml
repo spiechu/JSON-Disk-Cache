@@ -16,12 +16,20 @@
     <target name="prepare" depends="cleanup">
         <echo msg="Making build dir"/>
         <mkdir dir="${build_dir}"/>
+        <mkdir dir="${build_dir}/coverage-report"/>
 
         <echo msg="Trying to set default.timezone ini (fixes Drone.io CI)"/>
         <php expression="ini_set('date.timezone', 'Europe/Warsaw');"/>
     </target>
 
     <target name="unit_test" depends="prepare">
+        <coverage-setup database="${build_dir}/coverage-report/database.db">
+            <fileset dir="${src_dir}">
+                <include name="*.php"/>
+                <exclude name="*Test.php"/>
+            </fileset>
+        </coverage-setup>
+
         <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
             <formatter type="plain" usefile="false"/>
             <batchtest>
@@ -31,9 +39,6 @@
             </batchtest>
         </phpunit>
 
-        <exec passthru="true"
-              command="phpunit --bootstrap ${tests_dir}/bootstrap.php --configuration phpunit.xml.dist --coverage-text --coverage-clover=${build_dir}/coverage.clover"/>
-        <exec passthru="true" command="ls ${build_dir}"/>
     </target>
 
 </project>
