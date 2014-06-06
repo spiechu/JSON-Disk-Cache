@@ -18,7 +18,7 @@
     },
     "require-dev": {
         "phing/phing": "2.*",
-        "phpunit/phpunit:": "~4.0@stable"
+        "phpunit/phpunit": "~4.0@stable"
     },
     "repositories": [
         {
