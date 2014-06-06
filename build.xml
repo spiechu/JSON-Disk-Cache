@@ -30,15 +30,6 @@
             </fileset>
         </coverage-setup>
 
-        <exec command="ls ${basedir}/vendor"/>
-
-        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="false">
-            <formatter type="summary"/>
-            <batchtest>
-                <fileset dir="${tests_dir}" includes="**/*Test.php"/>
-            </batchtest>
-        </phpunit>
-
         <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
             <formatter type="clover" todir="${build_dir}/coverage-report" outfile="cover.clover"/>
             <batchtest>
