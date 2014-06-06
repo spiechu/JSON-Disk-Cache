@@ -14,8 +14,10 @@ install:
   - wget https://scrutinizer-ci.com/ocular.phar
   - pear config-set auto_discover 1
   - pear channel-discover pear.phing.info
-  - pear remote-list -c phing
+  - pear channel-discover pear.phpunit.de
+  - pear remote-list -c phpunit
   - pear install phing/phing
+  - pear install phpunit/PHPUnit
   - composer install --dev
 
 before_script:
