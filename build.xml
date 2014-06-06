@@ -39,8 +39,8 @@
     </target>
 
     <target name="upload_to_scrutinizer" depends="unit_test">
-        <exec command="wget https://scrutinizer-ci.com/ocular.phar"/>
-        <exec command="php ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover"/>
+        <httpget url="https://scrutinizer-ci.com/ocular.phar" dir="${build_dir}"/>
+        <exec command="php ${build_dir}/ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover"/>
     </target>
 
 </project>
