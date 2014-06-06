@@ -25,17 +25,15 @@
     <target name="unit_test" depends="prepare">
         <coverage-setup database="${build_dir}/coverage-report/database.db">
             <fileset dir="${src_dir}">
-                <include name="*.php"/>
-                <exclude name="*Test.php"/>
+                <include name="**/*.php"/>
+                <exclude name="**/*Test.php"/>
             </fileset>
         </coverage-setup>
 
         <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
             <formatter type="clover" todir="${build_dir}/coverage-report" outfile="cover.clover"/>
             <batchtest>
-                <fileset dir="${tests_dir}">
-                    <include name="*Test.php"/>
-                </fileset>
+                <fileset dir="${tests_dir}" includes="**/*Test.php"/>
             </batchtest>
         </phpunit>
 
