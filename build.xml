@@ -22,14 +22,10 @@
     </target>
 
     <target name="unit_test" depends="prepare">
-        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
-            <formatter type="plain" usefile="false"/>
-            <batchtest>
-                <fileset dir="${tests_dir}">
-                    <include name="*Test.php"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
+
+
+        <exec command="phpunit --bootstrap ${tests_dir}/bootstrap.php --configuration ../phpunit.xml.dist --coverage-text --coverage-clover=${build_dir}/coverage.clover"/>
+
     </target>
 
 </project>
