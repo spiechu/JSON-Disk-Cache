@@ -20,7 +20,6 @@ install:
   - pear channel-discover pear.phpunit.de
   - pear update-channels
   - pear install phing/phing
-  - sudo pear install phpunit/PHPUnit
 
   - composer self-update
   - composer install --dev
