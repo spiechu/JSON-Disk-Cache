@@ -31,7 +31,7 @@
         </coverage-setup>
 
         <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
-            <formatter type="plain" usefile="false"/>
+            <formatter type="clover" todir="${build_dir}/coverage-report" outfile="cover.clover"/>
             <batchtest>
                 <fileset dir="${tests_dir}">
                     <include name="*Test.php"/>
