@@ -6,7 +6,7 @@
     <property name="src_dir" value="${basedir}/src"/>
     <property name="tests_dir" value="${basedir}/tests"/>
 
-    <target name="build" depends="prepare,unit_test"/>
+    <target name="build" depends="prepare,unit_test,upload_to_scrutinizer"/>
 
     <target name="cleanup">
         <echo msg="Deleting build dir"/>
@@ -31,12 +31,16 @@
         </coverage-setup>
 
         <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true" printsummary="true">
-            <formatter type="plain" usefile="false"/>
+            <formatter type="clover" todir="${build_dir}/coverage-report" outfile="coverage.clover"/>
             <batchtest>
                 <fileset dir="${tests_dir}" includes="**/*Test.php"/>
             </batchtest>
         </phpunit>
+    </target>
 
+    <target name="upload_to_scrutinizer" depends="unit_test">
+        <exec command="wget https://scrutinizer-ci.com/ocular.phar"/>
+        <exec command="php ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover"/>
     </target>
 
 </project>
