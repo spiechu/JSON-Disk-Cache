@@ -24,8 +24,9 @@
     <target name="unit_test" depends="prepare">
 
 
-        <exec command="phpunit --bootstrap ${tests_dir}/bootstrap.php --configuration ../phpunit.xml.dist --coverage-text --coverage-clover=${build_dir}/coverage.clover"/>
-
+        <exec passthru="true"
+              command="phpunit --bootstrap ${tests_dir}/bootstrap.php --configuration ../phpunit.xml.dist --coverage-text --coverage-clover=${build_dir}/coverage.clover"/>
+        <exec passthru="true" command="ls ${build_dir}"/>
     </target>
 
 </project>
