@@ -1,13 +1,9 @@
-before_commands:
-  - composer install --dev
-
 filter:
   paths: [src/*]
-  excluded_paths: [tests/*, vendor/*]
+  excluded_paths: [tests/*]
 
 tools:
-  php_cs_fixer:
-    config: { level: psr2 }
+  php_pdepend: true
 
   external_code_coverage:
     timeout: 1800
