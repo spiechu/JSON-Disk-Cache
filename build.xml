@@ -30,14 +30,14 @@
             </fileset>
         </coverage-setup>
 
-        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
+        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="false">
             <formatter type="plain"/>
             <batchtest>
                 <fileset dir="${tests_dir}" includes="**/*Test.php"/>
             </batchtest>
         </phpunit>
 
-        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true">
+        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="false">
             <formatter type="summary"/>
             <batchtest>
                 <fileset dir="${tests_dir}" includes="**/*Test.php"/>
