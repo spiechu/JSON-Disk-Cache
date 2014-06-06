@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Money" default="build">
+<project name="JSONDiskCache" default="build">
 
     <property name="basedir" value="${project.basedir}"/>
     <property name="build_dir" value="${basedir}/build"/>
     <property name="src_dir" value="${basedir}/src"/>
     <property name="tests_dir" value="${basedir}/tests"/>
 
-    <target name="build" depends="prepare"/>
+    <target name="build" depends="prepare,unit_test"/>
 
     <target name="cleanup">
         <echo msg="Deleting build dir"/>

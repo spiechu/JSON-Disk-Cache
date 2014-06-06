@@ -25,6 +25,7 @@ script:
   - phpunit --coverage-text --coverage-clover=coverage.clover
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
   - phing
+  - ls ./build
 
 notifications:
   email: false
