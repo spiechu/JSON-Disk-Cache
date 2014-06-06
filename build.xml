@@ -30,6 +30,8 @@
             </fileset>
         </coverage-setup>
 
+        <exec command="ls ${basedir}/vendor"/>
+
         <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="false">
             <formatter type="summary"/>
             <batchtest>
