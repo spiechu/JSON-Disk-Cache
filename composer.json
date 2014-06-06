@@ -24,7 +24,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "Spiechu": "src/"
+            "": "src/"
         }
     }
 }

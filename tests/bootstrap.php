@@ -9,5 +9,5 @@
  * file that was distributed with this source code.
  */
 
-$loader = require_once __DIR__ . "/../vendor/autoload.php";
-$loader->add('Spiechu\\', __DIR__);
+require_once __DIR__ . "/../vendor/autoload.php";
+//$loader->add('Spiechu\\', __DIR__);
