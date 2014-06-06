@@ -13,14 +13,14 @@ matrix:
 install:
   - wget https://scrutinizer-ci.com/ocular.phar
 
-  - apt-get install phpunit
+  - sudo apt-get install phpunit
 
   - pear config-set auto_discover 1
   - pear channel-discover pear.phing.info
   - pear channel-discover pear.phpunit.de
   - pear update-channels
   - pear install phing/phing
-  - pear install phpunit/PHPUnit
+  - sudo pear install phpunit/PHPUnit
 
   - composer self-update
   - composer install --dev
