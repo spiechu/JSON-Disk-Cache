@@ -30,8 +30,10 @@
             </fileset>
         </coverage-setup>
 
-        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true" printsummary="true">
+        <phpunit bootstrap="${tests_dir}/bootstrap.php" codecoverage="true" printsummary="true" haltonerror="true"
+                 haltonfailure="true" haltonincomplete="true">
             <formatter type="clover" todir="${build_dir}/coverage-report" outfile="coverage.clover"/>
+            <formatter type="plain" usefile="false"/>
             <batchtest>
                 <fileset dir="${tests_dir}" includes="**/*Test.php"/>
             </batchtest>
@@ -40,7 +42,8 @@
 
     <target name="upload_to_scrutinizer" depends="unit_test">
         <exec command="wget https://scrutinizer-ci.com/ocular.phar" passthru="true"/>
-        <exec command="php ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover" passthru="true"/>
+        <exec command="php ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover"
+              passthru="true"/>
     </target>
 
 </project>

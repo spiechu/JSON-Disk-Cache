@@ -7,6 +7,9 @@ tools:
   external_code_coverage:
     timeout: 1800
 
+  php_cs_fixer:
+    config: { level: psr2 }
+
   php_code_sniffer: true
   php_cpd:
     enabled: true
