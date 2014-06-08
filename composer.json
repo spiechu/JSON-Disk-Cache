@@ -16,6 +16,9 @@
     "require": {
         "php": ">=5.4"
     },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*@stable"
+    },
     "repositories": [
         {
             "type": "git",
