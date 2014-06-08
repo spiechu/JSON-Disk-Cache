@@ -50,10 +50,6 @@ tools:
 
   php_analyzer: true
 
-  php_cpd:
-    enabled: true
-    excluded_dirs: [tests]
-
   php_loc:
     enabled: true
     excluded_dirs: [tests]
