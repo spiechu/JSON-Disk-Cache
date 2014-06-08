@@ -26,23 +26,27 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
      */
     protected $setupFiles;
 
-    /**
-     * Dir permissions.
-     *
-     * @var int
-     */
-    protected $perms = 0700;
-
     public function testDirIsCreated()
     {
-        $dirToCreate = __DIR__ . '/test_dir';
+        $dirToCreate = __DIR__ . '/../../test_dir';
+        $perms = 0777;
 
-        @unlink($dirToCreate);
+        try {
+            rmdir($dirToCreate);
+        } catch (\Exception $e) {
+            $exMsg = $e->getMessage();
+            if (preg_match('/permission denied/i', $exMsg)) {
+                $this->fail('Cant delete, permission denied to directory');
+            } else {
+                $this->fail($exMsg);
+            }
+        }
         $this->assertFalse(file_exists($dirToCreate), 'Should not be directory there');
 
-        $this->setupFiles->setupCacheDir($dirToCreate, $this->perms);
+        $this->setupFiles->setupCacheDir($dirToCreate, $perms);
         $this->assertTrue(file_exists($dirToCreate), 'Directory should be created');
     }
+
 
     protected function setUp()
     {
