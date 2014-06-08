@@ -41,7 +41,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
                 $this->fail($exMsg);
             }
         }
-        $this->assertFalse(file_exists($dirToCreate), 'Should not be directory there');
+        $this->assertFalse(file_exists($dirToCreate), 'Should be nothing at ' . realpath($dirToCreate));
 
         $this->setupFiles->setupCacheDir($dirToCreate, $perms);
         $this->assertTrue(file_exists($dirToCreate), 'Directory should be created');
