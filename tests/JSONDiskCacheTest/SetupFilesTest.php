@@ -17,7 +17,7 @@ use Spiechu\JSONDiskCache\SetupFiles;
  * @author Dawid Spiechowicz <spiechu@gmail.com>
  * @since 0.1.0
  */
-class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
+class SetupFilesTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tested object.
@@ -25,6 +25,24 @@ class JSONDiskCacheTest extends \PHPUnit_Framework_TestCase
      * @var SetupFiles
      */
     protected $setupFiles;
+
+    /**
+     * Dir permissions.
+     *
+     * @var int
+     */
+    protected $perms = 0700;
+
+    public function testDirIsCreated()
+    {
+        $dirToCreate = __DIR__ . '/test_dir';
+
+        @unlink($dirToCreate);
+        $this->assertFalse(file_exists($dirToCreate), 'Should not be directory there');
+
+        $this->setupFiles->setupCacheDir($dirToCreate, $this->perms);
+        $this->assertTrue(file_exists($dirToCreate), 'Directory should be created');
+    }
 
     protected function setUp()
     {
