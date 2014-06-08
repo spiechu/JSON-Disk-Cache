@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="JSONDiskCache" default="build">
 
-    <property name="basedir" value="${project.basedir}"/>
-    <property name="build_dir" value="${basedir}/build"/>
-    <property name="src_dir" value="${basedir}/src"/>
-    <property name="tests_dir" value="${basedir}/tests"/>
+    <property name="build_dir" value="${project.basedir}/build"/>
+    <property name="src_dir" value="$project.basedir}/src"/>
+    <property name="tests_dir" value="${project.basedir}/tests"/>
 
     <target name="build" depends="prepare,unit_test,upload_to_scrutinizer"/>
 
@@ -16,6 +15,8 @@
     <target name="prepare" depends="cleanup">
         <echo msg="Making build dir"/>
         <mkdir dir="${build_dir}"/>
+
+        <echo msg="Making coverage-report dir"/>
         <mkdir dir="${build_dir}/coverage-report"/>
 
         <echo msg="Trying to set default.timezone ini (fixes Drone.io CI)"/>
@@ -23,6 +24,7 @@
     </target>
 
     <target name="unit_test" depends="prepare">
+        <echo msg="Setting up coverage database"/>
         <coverage-setup database="${build_dir}/coverage-report/database.db">
             <fileset dir="${src_dir}">
                 <include name="**/*.php"/>
@@ -34,8 +36,6 @@
                  haltonfailure="true" haltonincomplete="true">
             <formatter type="clover" todir="${build_dir}/coverage-report" outfile="coverage.clover"/>
             <formatter type="plain" usefile="false"/>
-            <formatter type="summary" usefile="false"/>
-            <formatter type="xml" todir="${build_dir}/coverage-report" outfile="coverage.xml"/>
             <batchtest>
                 <fileset dir="${tests_dir}" includes="**/*Test.php"/>
             </batchtest>
@@ -43,9 +43,9 @@
     </target>
 
     <target name="upload_to_scrutinizer" depends="unit_test">
-        <exec command="wget https://scrutinizer-ci.com/ocular.phar" passthru="true"/>
-        <exec command="php ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover"
-              passthru="true"/>
+        <echo msg="Uploading results to Scrutinizer"/>
+        <exec command="wget https://scrutinizer-ci.com/ocular.phar"/>
+        <exec command="php ocular.phar code-coverage:upload --format=php-clover ${build_dir}/coverage-report/coverage.clover"/>
     </target>
 
 </project>
