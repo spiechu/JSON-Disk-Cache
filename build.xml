@@ -34,7 +34,8 @@
                  haltonfailure="true" haltonincomplete="true">
             <formatter type="clover" todir="${build_dir}/coverage-report" outfile="coverage.clover"/>
             <formatter type="plain" usefile="false"/>
-            <formatter type="printsummary" usefile="false"/>
+            <formatter type="summary" usefile="false"/>
+            <formatter type="xml" todir="${build_dir}/coverage-report" outfile="coverage.xml"/>
             <batchtest>
                 <fileset dir="${tests_dir}" includes="**/*Test.php"/>
             </batchtest>
