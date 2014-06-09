@@ -84,13 +84,37 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
      * @expectedExceptionMessage is not readable or writable
      */
-    public function testDirPerms()
+    public function testDirWritePerms()
     {
         $perms = 0555;
-        $errDir = $this->testDir . DIRECTORY_SEPARATOR . 'read_perm_err';
-        if (mkdir($errDir, 0555)) {
+        $errDir = $this->testDir . DIRECTORY_SEPARATOR . 'write_perm_err';
+        if (mkdir($errDir, $perms)) {
             $this->setupFiles->setupCacheDir($errDir, $perms);
         }
+    }
+
+    /**
+     * @depends testDirIsCreated
+     * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
+     * @expectedExceptionMessage is not readable or writable
+     */
+    public function testDirReadPerms()
+    {
+        $perms = 0333;
+        $errDir = $this->testDir . DIRECTORY_SEPARATOR . 'read_perm_err';
+        if (mkdir($errDir, $perms)) {
+            $this->setupFiles->setupCacheDir($errDir, $perms);
+        }
+    }
+
+    /**
+     * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
+     */
+    public function testIllegalDirLocation()
+    {
+        $perms = 0777;
+        $errDir = realpath($this->testDir . '/../../..') . DIRECTORY_SEPARATOR . 'illegal_location_dir';
+        $this->setupFiles->setupCacheDir($errDir, $perms);
     }
 
     protected function setUp()
