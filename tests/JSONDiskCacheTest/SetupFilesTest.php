@@ -109,12 +109,15 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
+     * @expectedExceptionMessage is not readable or writable
      */
     public function testIllegalDirLocation()
     {
-        $perms = 0777;
-        $errDir = realpath($this->testDir . '/../../../..') . DIRECTORY_SEPARATOR . 'illegal_location_dir';
-        $this->setupFiles->setupCacheDir($errDir, $perms);
+        $perms = 0111;
+        $errDir = $this->testDir . DIRECTORY_SEPARATOR . 'dir_perm_err';
+        if (mkdir($errDir, $perms)) {
+            $this->setupFiles->setupCacheDir($errDir . DIRECTORY_SEPARATOR . 'err', $perms);
+        }
     }
 
     protected function setUp()
