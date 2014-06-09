@@ -24,33 +24,62 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
      *
      * @var SetupFiles
      */
-    protected $setupFiles;
+    private $setupFiles;
+
+    private $testDir;
 
     public function testDirIsCreated()
     {
-        $dirToCreate = __DIR__ . '/../../test_dir';
+        $this->prepareTestDir();
+        $this->assertFalse(file_exists($this->testDir), 'Should be nothing at ' . realpath($this->testDir));
+
         $perms = 0777;
-
-        try {
-            rmdir($dirToCreate);
-        } catch (\Exception $e) {
-            $exMsg = $e->getMessage();
-            if (preg_match('/permission denied/i', $exMsg)) {
-                $this->fail('Cant delete, permission denied to directory');
-            } else {
-                $this->fail($exMsg);
-            }
-        }
-        $this->assertFalse(file_exists($dirToCreate), 'Should be nothing at ' . realpath($dirToCreate));
-
-        $this->setupFiles->setupCacheDir($dirToCreate, $perms);
-        $this->assertTrue(file_exists($dirToCreate), 'Directory should be created');
+        $this->setupFiles->setupCacheDir($this->testDir, $perms);
+        $this->assertTrue(file_exists($this->testDir), 'Directory should be created');
     }
 
+    protected function prepareTestDir()
+    {
+        try {
+            // now I know why I hate Windows so much...
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                // dirty workaround readonly attribute and permission denied
+                exec("RMDIR {$this->testDir} /S /Q", $output, $returnVar);
+                if ($returnVar) {
+                    throw new \RuntimeException('Delete under Windows failed');
+                }
+            } else {
+                unlink($this->testDir);
+            }
+        } catch (\Exception $e) {
+            $exMsg = $e->getMessage();
+            switch (true) {
+                case preg_match('/no such file or directory/i', $exMsg):
+                    // we're ok, proceed
+                    break;
+                case preg_match('/permission denied/i', $exMsg):
+                    $this->fail('Cant delete, permission denied to directory');
+                    break;
+                default:
+                    $this->fail($exMsg);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @depends testDirIsCreated
+     */
+    public function testDirPerms()
+    {
+        $filePretendingDir = $this->testDir . '/fake_test_dir';
+        touch($filePretendingDir);
+    }
 
     protected function setUp()
     {
         $this->setupFiles = new SetupFiles();
+        $this->testDir = realpath(__DIR__ . '/../../test_dir');
     }
 
     protected function tearDown()
