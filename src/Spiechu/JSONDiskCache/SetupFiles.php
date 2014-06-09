@@ -50,8 +50,8 @@ class SetupFiles
             throw new JSONDiskCacheException("{$hashFile->getFilename()} is not a file");
         }
 
-        $perms = $hashFile->getPerms() & 0777;
-        if ($perms !== $perms && !chmod($hashFile, $perms)) {
+        $filePerms = $hashFile->getPerms() & 0777;
+        if ($filePerms !== $perms && !chmod($hashFile, $perms)) {
             throw new JSONDiskCacheException(
                 "Cant change file permissions at {$hashFile->getFilename()}"
             );
