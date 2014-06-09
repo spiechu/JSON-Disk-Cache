@@ -249,22 +249,16 @@ class JSONDiskCache
      * Shorthand method to get cached value and set if cache is not valid.
      *
      * @param string|array $name cache name in current domain or array with name and params
-     * @param string|array $objectAndMethod function name/array with object and method name
-     *                                       to execute to retrieve the value to set
+     * @param callable $callToRetrieveVal execute to retrieve the value to set
      * @param  array|null $params $params to pass to $objectAndMethod function
      * @param  integer|null $validTime $this->_validTime is used when set to null
      * @return mixed|null   value from cache or null when not found or not valid
      */
-    public function getSet($name, $objectAndMethod, array $params = null, $validTime = null)
+    public function getSet($name, callable $callToRetrieveVal, array $params = null, $validTime = null)
     {
         $returnValue = $this->get($name);
         if ($returnValue === null) {
-            $params = $params ? : [];
-            if (is_array($objectAndMethod) || is_string($objectAndMethod)) {
-                $this->set($name, call_user_func_array($objectAndMethod, $params), $validTime);
-            } else {
-                throw new JSONDiskCacheException('$objectAndMethod must be string or array');
-            }
+            $this->set($name, call_user_func_array($callToRetrieveVal, $params ? : []), $validTime);
         } else {
             return $returnValue;
         }
