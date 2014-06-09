@@ -13,6 +13,12 @@ namespace Spiechu\JSONDiskCache;
 
 class SetupFiles
 {
+    /**
+     * @param string $dirToCreate path to dir
+     * @param int $perms dir perms
+     * @return \SplFileInfo created/checked dir
+     * @throws JSONDiskCacheException
+     */
     public function setupCacheDir($dirToCreate, $perms)
     {
         $dir = new \SplFileInfo($dirToCreate);
@@ -32,6 +38,13 @@ class SetupFiles
         return $dir;
     }
 
+    /**
+     * @param \SplFileInfo $dir
+     * @param string $filename
+     * @param int $perms file perms
+     * @return \SplFileInfo
+     * @throws JSONDiskCacheException
+     */
     public function setupFile(\SplFileInfo $dir, $filename, $perms)
     {
         if (!$dir->isDir()) {
