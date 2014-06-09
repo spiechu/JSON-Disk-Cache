@@ -133,10 +133,7 @@ class JSONDiskCache
      */
     protected function setupCacheDir()
     {
-        $dir = $this->setupFiles->setupCacheDir($this->cacheDir, self::CACHE_DIR_PERMS);
-        if (!$dir instanceof \SplFileInfo) {
-            throw new JSONDiskCacheException('Dir setup error');
-        }
+        $this->setupFiles->setupCacheDir($this->cacheDir, self::CACHE_DIR_PERMS);
     }
 
     /**
@@ -146,14 +143,11 @@ class JSONDiskCache
      */
     protected function setupHashFile()
     {
-        $hashFile = $this->setupFiles->setupHashFile(
+        $hashFile = $this->setupFiles->setupFile(
             new \SplFileInfo($this->cacheDir),
             self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT,
             self::HASH_FILE_PERMS
         );
-        if (!$hashFile instanceof \SplFileInfo) {
-            throw new JSONDiskCacheException('Hash file setup error');
-        }
 
         $hashFileContents = json_decode(file_get_contents($hashFile), true);
         $this->hashTable = ($hashFileContents === null) ? [] : $hashFileContents;
@@ -521,21 +515,11 @@ class JSONDiskCache
      */
     protected function setupCacheFile()
     {
-        $file = new SplFileInfo($this->constructFullCacheFilenamePath($this->domain));
-        if (!file_exists($file)) {
-            try {
-                touch($file);
-                chmod($file, self::CACHE_FILE_PERMS);
-            } catch (\Exception $e) {
-                throw new JSONDiskCacheException($e->getMessage());
-            }
-        }
-        if (!$file->isFile()) {
-            throw new JSONDiskCacheException("{$file->getFilename()} is not a file");
-        }
-        if (!($file->isReadable() || $file->isWritable())) {
-            throw new JSONDiskCacheException("{$file->getFilename()} is not readable or writable");
-        }
+        $file = $this->setupFiles->setupFile(
+            new \SplFileInfo($this->cacheDir),
+            (new \SplFileInfo($this->constructFullCacheFilenamePath($this->domain)))->getFilename(),
+            self::CACHE_FILE_PERMS
+        );
 
         return $file;
     }
