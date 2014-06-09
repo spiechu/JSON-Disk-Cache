@@ -109,7 +109,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
-     * @expectedExceptionMessage is not readable or writable
+     * @expectedExceptionMessage permission denied
      */
     public function testIllegalDirLocation()
     {
