@@ -25,7 +25,7 @@ class SetupFiles
         if (!$dir->isDir()) {
             throw new JSONDiskCacheException("{$dirToCreate} is not a dir");
         }
-        if (!($dir->isReadable() || $dir->isWritable())) {
+        if (!($dir->isReadable() && $dir->isWritable())) {
             throw new JSONDiskCacheException("{$dirToCreate} is not readable or writable");
         }
 

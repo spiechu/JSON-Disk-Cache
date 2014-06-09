@@ -70,13 +70,27 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
      * @expectedExceptionMessage is not a dir
      */
-    public function testDirPerms()
+    public function testFakeDir()
     {
         $filePretendingDir = $this->testDir . DIRECTORY_SEPARATOR . 'fake_test_dir';
         touch($filePretendingDir);
 
         $perms = 0777;
         $this->setupFiles->setupCacheDir($filePretendingDir, $perms);
+    }
+
+    /**
+     * @depends testDirIsCreated
+     * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
+     * @expectedExceptionMessage is not readable or writable
+     */
+    public function testDirPerms()
+    {
+        $perms = 0555;
+        $errDir = $this->testDir . DIRECTORY_SEPARATOR . 'read_perm_err';
+        if (mkdir($errDir, 0555)) {
+            $this->setupFiles->setupCacheDir($errDir, $perms);
+        }
     }
 
     protected function setUp()
