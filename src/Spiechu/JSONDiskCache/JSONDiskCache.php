@@ -104,6 +104,11 @@ class JSONDiskCache
     protected $fetchedDomains = [];
 
     /**
+     * @var SetupFiles
+     */
+    protected $setupFiles;
+
+    /**
      * @param string|null $cacheDir points to cache dir or uses default when null
      * @param string $domain default domain
      */
@@ -114,6 +119,8 @@ class JSONDiskCache
         } else {
             $this->cacheDir = __DIR__ . DIRECTORY_SEPARATOR . 'jsoncache';
         }
+
+        $this->setupFiles = new SetupFiles();
         $this->setupCacheDir();
         $this->setupHashFile();
         $this->setDomain($domain);
@@ -126,19 +133,9 @@ class JSONDiskCache
      */
     protected function setupCacheDir()
     {
-        $dir = new SplFileInfo($this->cacheDir);
-        if (!file_exists($dir)) {
-            try {
-                mkdir($dir, self::CACHE_DIR_PERMS);
-            } catch (\Exception $e) {
-                throw new JSONDiskCacheException($e->getMessage());
-            }
-        }
-        if (!$dir->isDir()) {
-            throw new JSONDiskCacheException("{$this->cacheDir} is not a dir");
-        }
-        if (!($dir->isReadable() || $dir->isWritable())) {
-            throw new JSONDiskCacheException("{$this->cacheDir} is not readable or writable");
+        $dir = $this->setupFiles->setupCacheDir($this->cacheDir, self::CACHE_DIR_PERMS);
+        if (!$dir instanceof \SplFileInfo) {
+            throw new JSONDiskCacheException('Dir setup error');
         }
     }
 
@@ -149,22 +146,15 @@ class JSONDiskCache
      */
     protected function setupHashFile()
     {
-        $fileName = $this->cacheDir . DIRECTORY_SEPARATOR . self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT;
-        $hashFile = new SplFileInfo($fileName);
-        if (!file_exists($hashFile)) {
-            try {
-                touch($hashFile);
-                chmod($hashFile, self::HASH_FILE_PERMS);
-            } catch (\Exception $e) {
-                throw new JSONDiskCacheException($e->getMessage());
-            }
+        $hashFile = $this->setupFiles->setupHashFile(
+            new \SplFileInfo($this->cacheDir),
+            self::HASH_FILE_NAME . '.' . self::CACHE_FILE_EXT,
+            self::HASH_FILE_PERMS
+        );
+        if (!$hashFile instanceof \SplFileInfo) {
+            throw new JSONDiskCacheException('Hash file setup error');
         }
-        if (!$hashFile->isFile()) {
-            throw new JSONDiskCacheException("{$hashFile->getFilename()} is not a file");
-        }
-        if (!($hashFile->isReadable() || $hashFile->isWritable())) {
-            throw new JSONDiskCacheException("{$hashFile->getFilename()} is not readable or writable");
-        }
+
         $hashFileContents = json_decode(file_get_contents($hashFile), true);
         $this->hashTable = ($hashFileContents === null) ? [] : $hashFileContents;
     }
