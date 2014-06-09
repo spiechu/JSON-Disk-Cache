@@ -40,10 +40,8 @@ class SetupFiles
 
         $fileName = $dir->getRealPath() . DIRECTORY_SEPARATOR . $hashFilename;
         $hashFile = new \SplFileInfo($fileName);
-        if (!file_exists($hashFile)) {
-            if (!touch($hashFile)) {
-                throw new JSONDiskCacheException("Error creating empty hash file {$hashFile->getFilename()}");
-            }
+        if (!file_exists($hashFile) && !touch($hashFile)) {
+            throw new JSONDiskCacheException("Error creating empty hash file {$hashFile->getFilename()}");
         }
 
         if (!$hashFile->isFile()) {
