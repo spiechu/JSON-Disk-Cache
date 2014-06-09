@@ -2,7 +2,7 @@
 <project name="JSONDiskCache" default="build">
 
     <property name="build_dir" value="${project.basedir}/build"/>
-    <property name="src_dir" value="$project.basedir}/src"/>
+    <property name="src_dir" value="${project.basedir}/src"/>
     <property name="tests_dir" value="${project.basedir}/tests"/>
 
     <target name="build" depends="prepare,unit_test,upload_to_scrutinizer"/>

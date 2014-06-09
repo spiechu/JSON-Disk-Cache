@@ -11,6 +11,7 @@
 
 namespace Spiechu\JSONDiskCacheTest;
 
+use Spiechu\JSONDiskCache\JSONDiskCacheException;
 use Spiechu\JSONDiskCache\SetupFiles;
 
 /**
@@ -66,13 +67,16 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testDirIsCreated
+     * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
+     * @expectedExceptionMessage is not a dir
      */
     public function testDirPerms()
     {
-        $filePretendingDir = $this->testDir . '/fake_test_dir';
+        $filePretendingDir = $this->testDir . DIRECTORY_SEPARATOR . 'fake_test_dir';
         touch($filePretendingDir);
 
-
+        $perms = 0777;
+        $this->setupFiles->setupCacheDir($filePretendingDir, $perms);
     }
 
     protected function setUp()
