@@ -37,7 +37,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
         $perms = 0777;
         $result = $this->setupFiles->setupCacheDir($this->testDir, $perms);
         $this->assertInstanceOf('\SplFileInfo', $result);
-        $this->assertTrue(file_exists($this->testDir), 'Directory should be created');
+        $this->assertTrue(is_dir($this->testDir), 'Directory should be created');
     }
 
     protected function prepareTestDir()
@@ -110,6 +110,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @depends testDirIsCreated
      * @expectedException \Spiechu\JSONDiskCache\JSONDiskCacheException
      * @expectedExceptionMessage Permission denied
      */
@@ -120,6 +121,18 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
         if (mkdir($errDir, $perms)) {
             $this->setupFiles->setupCacheDir($errDir . DIRECTORY_SEPARATOR . 'err', $perms);
         }
+    }
+
+    /**
+     * @depends testDirIsCreated
+     */
+    public function testCreatingBasicHashFile()
+    {
+        $hashFilename = 'basic_hash.hash';
+        $result = $this->setupFiles->setupHashFile(new \SplFileInfo($this->testDir), $hashFilename, 0777);
+
+        $this->assertInstanceOf('\SplFileInfo', $result);
+        $this->assertTrue(is_file($result), 'File should be created');
     }
 
     protected function setUp()
