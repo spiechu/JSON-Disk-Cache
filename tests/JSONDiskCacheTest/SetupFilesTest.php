@@ -75,6 +75,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
     {
         $filePretendingDir = $this->testDir . DIRECTORY_SEPARATOR . 'fake_test_dir';
         touch($filePretendingDir);
+        $this->assertTrue(is_file($filePretendingDir), 'There should be file pretending to be dir');
 
         $perms = 0777;
         $this->setupFiles->setupCacheDir($filePretendingDir, $perms);
