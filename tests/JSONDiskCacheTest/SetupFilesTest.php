@@ -113,7 +113,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
     public function testIllegalDirLocation()
     {
         $perms = 0777;
-        $errDir = realpath($this->testDir . '/../../..') . DIRECTORY_SEPARATOR . 'illegal_location_dir';
+        $errDir = realpath($this->testDir . '/../../../..') . DIRECTORY_SEPARATOR . 'illegal_location_dir';
         $this->setupFiles->setupCacheDir($errDir, $perms);
     }
 
