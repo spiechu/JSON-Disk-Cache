@@ -32,14 +32,13 @@ class SetupFiles
         return $dir;
     }
 
-    public function setupHashFile(\SplFileInfo $dir, $hashFilename, $perms)
+    public function setupFile(\SplFileInfo $dir, $filename, $perms)
     {
         if (!$dir->isDir()) {
             throw new JSONDiskCacheException("{$dir} is not a dir");
         }
 
-        $fileName = $dir->getRealPath() . DIRECTORY_SEPARATOR . $hashFilename;
-        $hashFile = new \SplFileInfo($fileName);
+        $hashFile = new \SplFileInfo($dir->getRealPath() . DIRECTORY_SEPARATOR . $filename);
         if (!file_exists($hashFile) && !touch($hashFile)) {
             throw new JSONDiskCacheException("Error creating empty hash file {$hashFile->getFilename()}");
         }

@@ -11,7 +11,6 @@
 
 namespace Spiechu\JSONDiskCacheTest;
 
-use Spiechu\JSONDiskCache\JSONDiskCacheException;
 use Spiechu\JSONDiskCache\SetupFiles;
 
 /**
@@ -129,7 +128,7 @@ class SetupFilesTest extends \PHPUnit_Framework_TestCase
     public function testCreatingBasicHashFile()
     {
         $hashFilename = 'basic_hash.hash';
-        $result = $this->setupFiles->setupHashFile(new \SplFileInfo($this->testDir), $hashFilename, 0777);
+        $result = $this->setupFiles->setupFile(new \SplFileInfo($this->testDir), $hashFilename, 0777);
 
         $this->assertInstanceOf('\SplFileInfo', $result);
         $this->assertTrue(is_file($result), 'File should be created');
