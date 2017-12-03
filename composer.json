@@ -26,8 +26,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "": "src/"
+        "psr-4": {
+            "Spiechu\\JSONDiskCache\\": "src"
         }
     }
 }
