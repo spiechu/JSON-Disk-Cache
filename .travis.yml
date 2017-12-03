@@ -16,7 +16,7 @@ before_install:
   - composer selfupdate
 
 install:
-  - composer install --dev
+  - composer install
 
 before_script:
   - phpenv rehash
