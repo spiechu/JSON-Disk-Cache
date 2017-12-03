@@ -1,33 +1,31 @@
 {
-    "name": "spiechu/json-disk-cache",
-    "description": "Cache class intended to keep serialized data in JSON format files",
-    "type": "library",
-    "license": "MIT",
-    "keywords": ["cache", "caching", "json"],
-    "homepage": "https://github.com/spiechu/JSON-Disk-Cache",
-    "authors": [
-        {
-            "name": "Dawid Spiechowicz",
-            "email": "spiechu@gmail.com",
-            "homepage": "http://spiechu.pl",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": ">=5.4"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "3.7.*@stable"
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/spiechu/JSON-Disk-Cache.git"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Spiechu\\JSONDiskCache\\": "src"
-        }
+  "name": "spiechu/json-disk-cache",
+  "description": "Cache class intended to keep serialized data in JSON format files",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "cache",
+    "caching",
+    "json"
+  ],
+  "homepage": "https://github.com/spiechu/JSON-Disk-Cache",
+  "authors": [
+    {
+      "name": "Dawid Spiechowicz",
+      "email": "spiechu@gmail.com",
+      "homepage": "http://spiechu.pl",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*@stable"
+  },
+  "autoload": {
+    "psr-4": {
+      "Spiechu\\JSONDiskCache\\": "src"
+    }
+  }
 }
