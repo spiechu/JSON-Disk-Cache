@@ -10,20 +10,17 @@ matrix:
   allow_failures:
     - php: hhvm
 
-install:
-  - pear config-set auto_discover 1
-  - pear channel-discover pear.phing.info
-  - pear update-channels
-  - pear install phing/phing
-  - pear install phpunit/PHPUnit-3.7.35
+before_install:
+  - composer selfupdate
 
+install:
   - composer install --dev
 
 before_script:
   - phpenv rehash
 
 script:
-  - phing
+  - './vendor/bin/phpunit --testdox --coverage-text;'
 
 notifications:
   email: false

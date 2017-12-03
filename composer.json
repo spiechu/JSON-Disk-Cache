@@ -27,5 +27,10 @@
     "psr-4": {
       "Spiechu\\JSONDiskCache\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spiechu\\": "tests"
+    }
   }
 }
